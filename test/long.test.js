@@ -5,16 +5,16 @@ describe('/lib/long.js', function () {
   it('new Long(high, low) should ok', function () {
     var value = new Long(0, 0);
     expect(value.high).to.be(0);
-    expect(value.low).to.eql(0);
+    expect(value.low).to.be(0);
   });
 
   it('const should ok', function () {
     var zero = Long.ZERO;
     expect(zero.high).to.be(0);
-    expect(zero.low).to.eql(0);
+    expect(zero.low).to.be(0);
     var one = Long.ONE;
     expect(one.high).to.be(0);
-    expect(one.low).to.eql(1);
+    expect(one.low).to.be(1);
   });
 
   it('toBuffer should ok', function () {
