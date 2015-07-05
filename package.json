@@ -1,0 +1,38 @@
+{
+  "name": "sequoiadb",
+  "version": "0.0.1",
+  "description": "Node.js Driver for SequoiaDB",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SequoiaDB/node-sequoiadb.git"
+  },
+  "keywords": [
+    "SequoiaDB"
+  ],
+  "author": "WangTao",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/SequoiaDB/node-sequoiadb/issues"
+  },
+  "homepage": "https://github.com/SequoiaDB/node-sequoiadb#readme",
+  "dependencies": {
+    "bson": "~0.3.2",
+    "debug": "^2.2.0",
+    "long": "^2.2.5"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "expect.js": "*",
+    "travis-cov": "*",
+    "coveralls": "*",
+    "mocha-lcov-reporter": "*",
+    "istanbul": "*"
+  }
+}
