@@ -28,10 +28,16 @@ describe('Connection', function () {
     conn.disconnect(done);
   });
 
-  it('isValid should ok', function (done) {
-    conn.isValid(function (err, valid) {
+  it('createUser should ok', function (done) {
+    conn.createUser('user', 'pass', function (err) {
       expect(err).not.to.be.ok();
-      expect(valid).to.be(true);
+      done();
+    });
+  });
+
+  it('removeUser should ok', function (done) {
+    conn.removeUser('user', 'pass', function (err) {
+      expect(err).not.to.be.ok();
       done();
     });
   });
