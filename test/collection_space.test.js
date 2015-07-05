@@ -1,5 +1,6 @@
 var expect = require('expect.js');
 var common = require('./common');
+var Cursor = require('../lib/cursor');
 var CollectionSpace = require('../lib/collection_space');
 
 describe('CollectionSpace', function () {
@@ -59,6 +60,14 @@ describe('CollectionSpace', function () {
     conn.isCollectionSpaceExist(spaceName, function (err, exist) {
       expect(err).not.to.be.ok();
       expect(exist).to.be(false);
+      done();
+    });
+  });
+
+  it('should ok', function (done) {
+    conn.getCollectionSpaces(function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.a(Cursor);
       done();
     });
   });
