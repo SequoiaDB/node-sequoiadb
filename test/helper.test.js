@@ -68,4 +68,64 @@ describe('/lib/helper.js', function () {
       0xff, 0xff, 0xff, 0xff]));
   });
 
+  it('buildQueryRequest', function () {
+    var message = new Message(constants.Operation.OP_QUERY);
+    message.CollectionFullName = '$create collection';
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = 0;
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO; // 0
+    message.SkipRowsCount = Long.ZERO; // 0
+    message.ReturnRowsCount = Long.NEG_ONE; // -1
+
+    var matcher = {};
+    matcher[constants.FIELD_NAME] = 'collectionspace' + "." + 'collection';
+    // matcher
+    message.Matcher = matcher;
+    // selector
+    message.Selector = {};
+    // orderBy
+    message.OrderBy = {};
+    // hint
+    message.Hint = {};
+
+    var buff = helper.buildQueryRequest(message, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x94, 0x00, 0x00, 0x00, // message length
+                              0xd4, 0x07, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // =====
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0x12, 0x00, 0x00, 0x00, // collection name length
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, // skipRowsCount
+                              0xff, 0xff, 0xff, 0xff,
+      0xff, 0xff, 0xff, 0xff, // returnRowsCount
+      // ===== '$create collection'
+                              0x24, 99,   114,  101,
+      97,  116,  101,  32,  99,  111,  108,  108,
+      101,  99,  116,  105,  111,  110, 0x00, 0x00,
+      // matcher
+      0x2a, 0x00, 0x00, 0x00, 0x02, 0x4e, 0x61, 109,
+      101,  0x00, 27,   0x00, 0x00, 0x00, 99,   111,
+      108,  108,  101,  99,   116,  105,  111,  110,
+      115,  112,  97,   99,   101,  46,   99,   111,
+      108,  108,  101,  99,   116,  105,  111,  110,
+      0x00, 0x00, 0x00, 0x00,
+      // selector
+      0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      // orderby
+      0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      // hint
+      0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]));
+  });
 });

@@ -18,7 +18,7 @@ var expect = require('expect.js');
 var common = require('./common');
 var Cursor = require('../lib/cursor');
 
-describe('Connection', function () {
+describe('/lib/cursor', function () {
   var conn = common.createConnection();
   var cursor;
 
@@ -41,7 +41,9 @@ describe('Connection', function () {
     expect(cursor.isClosed).to.be(false);
     cursor.next(function (err, item) {
       expect(err).not.to.be.ok();
-      expect(item.Name).to.be.ok();
+      if (item) {
+        expect(item.Name).to.be.ok();
+      }
       done();
     });
   });
@@ -50,7 +52,9 @@ describe('Connection', function () {
     expect(cursor.isClosed).to.be(false);
     cursor.current(function (err, item) {
       expect(err).not.to.be.ok();
-      expect(item.Name).to.be.ok();
+      if (item) {
+        expect(item.Name).to.be.ok();
+      }
       done();
     });
   });
