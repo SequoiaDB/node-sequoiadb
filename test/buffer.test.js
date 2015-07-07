@@ -94,4 +94,15 @@ describe('/lib/buffer.js', function () {
     lbuff.writeLong(new Long(0x0, 0x1), 0);
     expect(lbuff.buff).to.eql(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]));
   });
+
+  it('readLong should ok', function () {
+    var bbuff = new XBuffer(new Buffer([0, 0, 0, 0, 0, 0, 0, 1]), true);
+    var bval = bbuff.readLong(0);
+    expect(bval.high).to.be(0);
+    expect(bval.low).to.be(1);
+    var lbuff = new XBuffer(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]), false);
+    var lval = lbuff.readLong(0);
+    expect(lval.high).to.be(0);
+    expect(lval.low).to.be(1);
+  });
 });

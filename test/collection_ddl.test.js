@@ -19,7 +19,7 @@ var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
-describe('Collection DDL', function () {
+xdescribe('Collection DDL', function () {
   var conn = common.createConnection();
   var collectionSpace;
   var spaceName = 'spacename' + Math.floor(Math.random() * 100);
