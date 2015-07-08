@@ -19,7 +19,7 @@
 var Connection = require('../lib/connection');
 
 exports.createConnection = function () {
-  return new Connection(12880, "1426595184.dbaas.sequoialab.net", {
+  return new Connection(11920, "1426587161.dbaas.sequoialab.net", {
     user: "",
     pass: ""
   });

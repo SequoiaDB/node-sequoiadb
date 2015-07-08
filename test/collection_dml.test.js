@@ -3,7 +3,7 @@ var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
-xdescribe('Collection DML', function () {
+describe('Collection DML', function () {
   var conn = common.createConnection();
   var collection;
 
@@ -52,13 +52,35 @@ xdescribe('Collection DML', function () {
       done();
     });
   });
-});
 
-// db.foo.bar.find();
-// {
-//   "_id": {
-//     "$oid": "53a82aa2c4b970091e000000"
-//   },
-//   "name": "sequoiadb"
-// }
-// Return 1 row(s).
+  it('query should ok with one item', function (done) {
+    collection.query(function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item.name).to.be("sequoiadb");
+        done();
+      });
+    });
+  });
+
+  it('delete should ok', function (done) {
+    collection.delete({name: "sequoiadb"}, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('query should ok with none', function (done) {
+    collection.query({}, {}, {}, {}, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be(null);
+        done();
+      });
+    });
+  });
+});

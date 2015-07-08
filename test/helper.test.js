@@ -3,7 +3,6 @@ var helper = require('../lib/helper');
 var constants = require('../lib/const');
 var Message = require('../lib/message');
 var Long = require('../lib/long');
-var bson = require('bson');
 
 describe('/lib/helper.js', function () {
   it('buildSystemInfoRequest should ok', function () {
