@@ -36,4 +36,12 @@ describe('/lib/long.js', function () {
     var lvalue = Long.readLongLE(buf, 0);
     expect(Long.equals(lvalue, new Long(0x08070605, 0x04030201))).to.be(true);
   });
+
+  it('Long.fromNumber should ok', function () {
+    var val = Long.fromNumber(1);
+    expect(Long.equals(val, new Long(0, 1))).to.be(true);
+    // TODO: for neg-number
+    // var negone = Long.fromNumber(-1);
+    // expect(Long.equals(negone, new Long(0xffffffff, 0xffffffff))).to.be(true);
+  });
 });
