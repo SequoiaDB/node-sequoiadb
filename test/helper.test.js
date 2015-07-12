@@ -193,4 +193,43 @@ describe('/lib/helper.js', function () {
       50,   55,   99,   50,   98,   54,   49,   98,
       98, 0, 0, 0]));
   });
+
+  it('buildDeleteRequest', function () {
+    var message = new Message();
+
+    message.OperationCode = constants.Operation.OP_DELETE;
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = 0;
+    message.NodeID = constants.ZERO_NODEID;
+    message.CollectionFullName = 'collectionspace' + "." + 'collection';
+    message.RequestID = Long.ZERO;
+    message.Matcher = {};
+    message.Hint = {};
+
+    var buff = helper.buildDeleteRequest(message, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x58, 0x00, 0x00, 0x00, // message length
+                              0xd6, 0x07, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0x1a, 0x00, 0x00, 0x00, // collection name length
+                              0x63, 0x6f, 0x6c, 0x6c,
+      0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x70,
+      0x61, 0x63, 0x65, 0x2e, 0x63, 0x6f, 0x6c, 0x6c,
+      0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x00, 0x00, // newCollectionName
+      // ===== 'matcher'
+      0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      // ===== hint
+      0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]));
+  });
 });
