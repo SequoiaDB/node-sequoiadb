@@ -39,8 +39,8 @@ describe('Collection DML', function () {
   after(function (done) {
     conn.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      done();
       conn.disconnect();
+      done();
     });
   });
 
