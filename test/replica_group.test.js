@@ -1,7 +1,7 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-describe('Collection DML', function () {
+describe('Replica Group', function () {
   var conn = common.createConnection();
 
   before(function (done) {
