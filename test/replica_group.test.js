@@ -59,6 +59,14 @@ describe('Collection DML', function () {
     });
   });
 
+  it('activateReplicaGroup should ok', function (done) {
+    conn.activateReplicaGroup('group5', function (err, group) {
+      expect(err).not.to.be.ok();
+      // expect(group).to.be.ok();
+      done();
+    });
+  });
+
   it('removeReplicaGroup should ok', function (done) {
     conn.removeReplicaGroup('group5', function (err, group) {
       expect(err).not.to.be.ok();
