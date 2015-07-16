@@ -18,6 +18,15 @@ test-coveralls:
 	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@cat ./coverage/lcov.info | $(COVERALLS) && rm -rf ./coverage
 
+debug:
+	@NODE_ENV=test \
+		node-debug --nodejs --harmony \
+		$(MOCHA) \
+		--reporter $(REPORTER) \
+		--timeout $(TIMEOUT) \
+		$(MOCHA_OPTS) \
+		$(TESTS)
+
 test-all: test test-coveralls
 
 .PHONY: test
