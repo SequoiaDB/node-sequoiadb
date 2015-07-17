@@ -17,7 +17,7 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-describe('Connection', function () {
+describe('Connection User', function () {
   var conn = common.createConnection();
 
   before(function (done) {
