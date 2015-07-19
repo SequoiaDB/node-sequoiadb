@@ -8,7 +8,7 @@
 ## 术语
 
 ### SequoiaDB自有术语
-- `SequoiaDB`，广州巨杉软件开发邮件公司开发的新型NoSQL数据库软件。
+- `SequoiaDB`，广州巨杉软件开发有限公司开发的新型NoSQL数据库软件。
 - `SequoiaDB服务`，一个运行着的SequoiaDB数据库实例，基于TCP协议上的SequoiaDB自有应用层协议对外提供服务。
 - `User`，用户。每个SequoiaDB中可以存在多个用户，每个客户端需要通过用户信息来连接SequoiaDB服务。
 - `Connection`，连接。客户端与SequoiaDB服务之间建立的TCP连接。
@@ -18,7 +18,7 @@
 - `Index`，索引。在集合上创建的索引。与其他数据库的索引作用相同。
 - `Transaction`，事务。NoSQL数据库一般没有事务的设计，SequoiaDB将关系型数据库的特点引入NoSQL领域。通过事务可以对数据操作进行事务处理，具体视情况进行提交或回滚。
 - `Cursor`，游标。对SequoiaDB服务进行列表（多个数据）查询时所使用到的工具。其原因是SequoiaDB在大数据量时并不一次性返回所有的数据到客户端，而是返回一个游标给调用方，调用方需要通过游标来逐个获取元素，并判断是否所有元素被返回。
-- `Lob`，大对象。SequoiaDB可以在数据中存放文件类的大对象。MongoDB中仅能存储文档，无法存储一些二进制内容，SequoiaDB在这里具有创新。
+- `Lob`，大对象。SequoiaDB可以在数据中存放文件类的大对象。MongoDB中的Binary JSON格式本事支持二进制数存储，只是存在稳定性的相关问题，所以不被建议使用，SequoiaDB在这里具有创新。
 - `Domain`，域。可以将集合或者集合空间划分在某个域中。
 - `Node`，SequiaDB服务集群的节点。通常指单个数据库服务节点。
 - `Master`，SequiaDB服务集群的主节点。
