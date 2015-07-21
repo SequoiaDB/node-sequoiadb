@@ -21,6 +21,7 @@ describe('Connection List', function () {
   var conn = common.createConnection();
 
   before(function (done) {
+    this.timeout(8000);
     conn.ready(done);
   });
 

@@ -23,6 +23,7 @@ describe('/lib/cursor', function () {
   var cursor;
 
   before(function (done) {
+    this.timeout(8000);
     conn.ready(function () {
       conn.getCollectionSpaces(function (err, _cursor) {
         expect(err).not.to.be.ok();

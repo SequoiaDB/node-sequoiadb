@@ -24,6 +24,7 @@ describe('Collection DDL', function () {
   var collectionSpace;
   var spaceName = 'spacename' + Math.floor(Math.random() * 100);
   before(function (done) {
+    this.timeout(8000);
     conn.ready(function () {
       conn.createCollectionSpace(spaceName, function (err, space) {
         expect(err).not.to.be.ok();
