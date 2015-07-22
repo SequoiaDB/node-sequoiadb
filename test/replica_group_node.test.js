@@ -94,7 +94,7 @@ describe('Replica Group Node', function () {
     this.timeout(8000);
     node.start(function (err, status) {
       expect(err).not.to.be.ok();
-      expect(status).to.be(false);
+      expect(status).to.be(true);
       done();
     });
   });
@@ -110,7 +110,7 @@ describe('Replica Group Node', function () {
 
   xit('node.connect should ok', function (done) {
     this.timeout(8000);
-    var conn = node.connect("", "");
+    var conn = node.connect('123.56.143.17', 11880);
     conn.onError(done);
     conn.ready(function () {
       conn.disconnect(done);
@@ -137,12 +137,13 @@ describe('Replica Group Node', function () {
     this.timeout(8000);
     group.start(function (err, ok) {
       expect(err).not.to.be.ok();
-      expect(ok).to.be(false);
+      expect(ok).to.be(true);
       done();
     });
   });
 
   it('stop Group should ok', function (done) {
+    this.timeout(8000);
     group.stop(function (err, ok) {
       expect(err).not.to.be.ok();
       expect(ok).to.be(true);
@@ -150,18 +151,22 @@ describe('Replica Group Node', function () {
     });
   });
 
-  xit('getMaster should ok', function (done) {
+  it('getMaster should ok', function (done) {
     group.getMaster(function (err, node) {
       expect(err).not.to.be.ok();
-      expect(node).to.be(null);
+      expect(node).to.be.ok();
+      expect(node.nodename).to.be('123.56.143.17:11880');
+      expect(node.group.name).to.be('for_node');
       done();
     });
   });
 
-  xit('getSlave should ok', function (done) {
+  it('getSlave should ok', function (done) {
     group.getSlave(function (err, node) {
       expect(err).not.to.be.ok();
-      expect(node).to.be(null);
+      expect(node).to.be.ok();
+      expect(node.nodename).to.be('123.56.143.17:11880');
+      expect(node.group.name).to.be('for_node');
       done();
     });
   });
