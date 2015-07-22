@@ -37,7 +37,7 @@ describe('Replica Group', function () {
       expect(cursor).to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
-        expect(item.Group.length).to.be(3);
+        expect(item.Group.length).to.above(0);
         expect(item.GroupID).to.be(1);
         expect(item.GroupName).to.be('SYSCatalogGroup');
         done();
