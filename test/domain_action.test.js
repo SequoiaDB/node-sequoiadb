@@ -25,7 +25,7 @@ describe('Domain Actions', function () {
   before(function (done) {
     this.timeout(8000);
     conn.ready(function () {
-      conn.createDomain(domainName, function (err, _domain) {
+      conn.getDomain(domainName, function (err, _domain) {
         expect(err).not.to.be.ok();
         expect(_domain).to.be.ok();
         expect(_domain.name).to.be(domainName);
@@ -49,6 +49,68 @@ describe('Domain Actions', function () {
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
         expect(item).to.be(null);
+        done();
+      });
+    });
+  });
+
+  describe('CollectionSpace with domain', function () {
+    var _space;
+
+    it('createCollectionSpace', function (done) {
+      var options = {'Domain': domainName};
+      conn.createCollectionSpace('space', options, function (err, space) {
+        expect(err).not.to.be.ok();
+        expect(space).to.be.ok();
+        _space = space;
+        done();
+      });
+    });
+
+    it('getCollectionSpaces should ok', function (done) {
+      domain.getCollectionSpaces(function (err, cursor) {
+        expect(err).not.to.be.ok();
+        expect(cursor).to.be.ok();
+        cursor.current(function (err, item) {
+          expect(err).not.to.be.ok();
+          expect(item.Name).to.be('space');
+          done();
+        });
+      });
+    });
+
+    it('createCollection should ok', function (done) {
+      var opts = {
+        "ShardingKey": {a: 1},
+        "ShardingType": "hash",
+        "AutoSplit": true
+      };
+      _space.createCollection('cl', opts, function (err, cursor) {
+        expect(err).not.to.be.ok();
+        expect(cursor).to.be.ok();
+        cursor.current(function (err, item) {
+          expect(err).not.to.be.ok();
+          expect(item.Name).to.be('space');
+          done();
+        });
+      });
+    });
+
+    it('getCollections should ok', function (done) {
+      domain.getCollections(function (err, cursor) {
+        expect(err).not.to.be.ok();
+        expect(cursor).to.be.ok();
+        cursor.current(function (err, item) {
+          expect(err).not.to.be.ok();
+          expect(item).to.be(null);
+          done();
+        });
+      });
+    });
+
+    it('dropCollectionSpace should ok', function (done) {
+      conn.dropCollectionSpace('space', function (err) {
+        expect(err).not.to.be.ok();
         done();
       });
     });
