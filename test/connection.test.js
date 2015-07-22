@@ -38,4 +38,12 @@ describe('Connection', function () {
       done();
     });
   });
+
+  it('setSessionAttr should ok', function (done) {
+    var conf = {"PreferedInstance": "m"};
+    conn.setSessionAttr(conf, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
 });
