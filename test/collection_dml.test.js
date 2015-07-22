@@ -21,6 +21,7 @@ var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 var Query = require('../lib/query');
+var Long = require('../lib/long');
 
 describe('Collection DML', function () {
   var conn = common.createConnection();
@@ -94,6 +95,41 @@ describe('Collection DML', function () {
     });
   });
 
+  describe('explain', function () {
+    var indexName = "QueryExpalinIndex";
+    before('createIndex', function (done) {
+      collection.createIndex(indexName, {"age": 1}, false, false, function (err) {
+        expect(err).not.to.be.ok();
+        done();
+      });
+    });
+
+    it('explain should ok with one item', function (done) {
+      // matcher, selector, orderBy, hint,
+      // skipRows, returnRows, flag, options, callback
+      var matcher = {
+        "age": {
+          "$gt": 50
+        }
+      };
+      var selector = { "age": "" };
+      var orderBy = { "age": -1 };
+      var hint = { "": indexName };
+      var options = { "Run": true };
+      collection.explain(matcher, selector, orderBy, hint, Long.fromNumber(47), Long.fromNumber(3), 0, options, function (err, cursor) {
+        expect(err).not.to.be.ok();
+        expect(cursor).to.be.ok();
+        cursor.next(function (err, item) {
+          expect(err).not.to.be.ok();
+          expect(item.IndexRead).to.be(1);
+          expect(item.DataRead).to.be(0);
+          expect(item.IndexName).to.be('QueryExpalinIndex');
+          done();
+        });
+      });
+    });
+  });
+
   it('update should ok', function (done) {
     var query = new Query();
     query.Matcher = {name: "sequoiadb"};
@@ -127,6 +163,45 @@ describe('Collection DML', function () {
         expect(item).to.be(null);
         done();
       });
+    });
+  });
+
+  it('query should ok with Query', function (done) {
+    var query = new Query();
+    collection.query(query, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be(null);
+        done();
+      });
+    });
+  });
+
+  it('upsert(matcher, modifier, hint) should ok', function (done) {
+    collection.upsert({name: "sequoiadb"}, {'$set': {age: 26}}, {}, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('bulkInsert should ok', function (done) {
+    var insertors = [
+      {name: "hi"},
+      {name: "jack"}
+    ];
+    collection.bulkInsert(insertors, 0, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('count should ok', function (done) {
+    collection.count(function (err, count) {
+      expect(err).not.to.be.ok();
+      expect(count).to.be(0);
+      done();
     });
   });
 });
