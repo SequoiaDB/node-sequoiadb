@@ -133,7 +133,7 @@ describe('Replica Group Node', function () {
     });
   });
 
-  it('start should ok', function (done) {
+  it('start Group should ok', function (done) {
     this.timeout(8000);
     group.start(function (err, ok) {
       expect(err).not.to.be.ok();
@@ -142,7 +142,7 @@ describe('Replica Group Node', function () {
     });
   });
 
-  it('stop should ok', function (done) {
+  it('stop Group should ok', function (done) {
     group.stop(function (err, ok) {
       expect(err).not.to.be.ok();
       expect(ok).to.be(true);

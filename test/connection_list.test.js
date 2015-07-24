@@ -18,18 +18,52 @@
 
 var expect = require('expect.js');
 var common = require('./common');
+var Collection = require('../lib/collection');
+var CollectionSpace = require('../lib/collection_space');
 
 describe('Connection List', function () {
-  var conn = common.createConnection();
+   var conn = common.createConnection();
 
-  before(function (done) {
-    this.timeout(8000);
-    conn.ready(done);
-  });
+   var collection;
 
-  after(function (done) {
-    conn.disconnect(done);
-  });
+   var spaceName = 'foo6';
+   var collectionName = "bar5";
+   
+   before(function (done) {
+      this.timeout(8000);
+      conn.ready(function () {
+	     var createCollection = function (space) {
+	         space.createCollection(collectionName, function (err, _collection) {
+	            expect(err).not.to.be.ok();
+	            expect(_collection).to.be.a(Collection);
+	            collection = _collection;
+	            done();
+	         });
+	      };
+	
+	      conn.createCollectionSpace(spaceName, function (err, space) {
+	         if (err) {
+	            conn.getCollectionSpace(spaceName, function (err, _space) {
+	               expect(err).not.to.be.ok();
+	               createCollection(_space);
+	            });
+	         }
+	         else {
+	            expect(space).to.be.a(CollectionSpace);
+	            expect(space.name).to.be(spaceName);
+	            createCollection(space);
+	         }
+	      });
+	   });
+    });
+
+	after(function (done) {
+       conn.dropCollectionSpace(spaceName, function (err) {
+	      expect(err).not.to.be.ok();
+	      conn.disconnect();
+	      done();
+	   });
+	});
 
   it('getCollectionSpaces should ok', function (done) {
     conn.getCollectionSpaces(function (err, cursor) {
@@ -45,7 +79,7 @@ describe('Connection List', function () {
   it('getCollectionSpaceNames should ok', function (done) {
     conn.getCollectionSpaceNames(function (err, names) {
       expect(err).to.not.be.ok();
-      expect(names.length).to.be.above(1);
+      expect(names.length).to.be(1);
       done();
     });
   });
@@ -64,7 +98,7 @@ describe('Connection List', function () {
   it('getCollectionNames should ok', function (done) {
     conn.getCollectionNames(function (err, names) {
       expect(err).to.not.be.ok();
-      expect(names.length).to.be.above(1);
+      expect(names.length).to.be(1);
       done();
     });
   });
