@@ -14,6 +14,8 @@
  *   limitations under the License.
  */
 
+'use strict';
+
 var expect = require('expect.js');
 var error = require('../lib/error');
 

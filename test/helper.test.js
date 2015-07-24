@@ -14,6 +14,8 @@
  *   limitations under the License.
  */
 
+'use strict';
+
 var expect = require('expect.js');
 var helper = require('../lib/helper');
 var constants = require('../lib/const');
