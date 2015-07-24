@@ -37,7 +37,7 @@ describe('Replica Group', function () {
       expect(cursor).to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
-        expect(item.Group.length).to.be(1);
+        expect(item.Group.length).to.be(3);
         expect(item.GroupID).to.be(1);
         expect(item.GroupName).to.be('SYSCatalogGroup');
         done();
@@ -79,9 +79,9 @@ describe('Replica Group', function () {
 
   it('createReplicaCataGroup should ok', function (done) {
     this.timeout(8000);
-    var host = '1426595184.dbaas.sequoialab.net';
-    var port = 12167;
-    var dbpath = '/opt/sequoiadb/database/data/11832';
+    var host = '123.56.143.17';
+    var port = 11810;
+    var dbpath = '/opt/sequoiadb/database/data/11890';
     conn.createReplicaCataGroup(host, port, dbpath, null, function (err) {
       expect(err).to.be.ok();
       expect(err.message).to.be("Unable to create new catalog when there's already one exists");

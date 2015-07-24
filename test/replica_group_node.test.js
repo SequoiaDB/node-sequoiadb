@@ -62,22 +62,22 @@ describe('Replica Group Node', function () {
   });
 
   it('createNode should ok', function (done) {
-    var host = '1426595184.dbaas.sequoialab.net';
-    var port = 12161;
-    var dbpath = '/opt/sequoiadb/database/data/11830';
+    var host = '123.56.143.17';
+    var port = 11880;
+    var dbpath = '/opt/sequoiadb/database/data/11880';
     group.createNode(host, port, dbpath, {}, function (err, _node) {
       expect(err).not.to.be.ok();
       node = _node;
-      expect(_node.nodename).to.be('1426595184.dbaas.sequoialab.net:12161');
+      expect(_node.nodename).to.be('123.56.143.17:11880');
       done();
     });
   });
 
   it('getNodeByName should ok', function (done) {
-    var name = '1426595184.dbaas.sequoialab.net:12161';
+    var name = '123.56.143.17:11880';
     group.getNodeByName(name, function (err, node) {
       expect(err).not.to.be.ok();
-      expect(node.nodename).to.be('1426595184.dbaas.sequoialab.net:12161');
+      expect(node.nodename).to.be('123.56.143.17:11880');
       done();
     });
   });
@@ -118,8 +118,8 @@ describe('Replica Group Node', function () {
   });
 
   it('removeNode should ok', function (done) {
-    var host = '1426595184.dbaas.sequoialab.net';
-    group.removeNode(host, 12161, {}, function (err) {
+    var host = '123.56.143.17';
+    group.removeNode(host, 11880, {}, function (err) {
       expect(err).to.be.ok();
       done();
     });
