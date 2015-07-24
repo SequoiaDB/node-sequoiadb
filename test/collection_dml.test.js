@@ -28,6 +28,7 @@ describe('Collection DML', function () {
   var collectionName = "bar5";
 
   before(function (done) {
+    this.timeout(8000);
     conn.ready(function () {
       var createCollection = function (space) {
         space.createCollection(collectionName, function (err, _collection) {
