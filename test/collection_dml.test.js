@@ -26,6 +26,7 @@ var Long = require('../lib/long');
 describe('Collection DML', function () {
   var conn = common.createConnection();
   var collection;
+  var _space;
 
   var spaceName = 'foo5';
   var collectionName = "bar5";
@@ -34,6 +35,7 @@ describe('Collection DML', function () {
     this.timeout(8000);
     conn.ready(function () {
       var createCollection = function (space) {
+        _space = space;
         space.createCollection(collectionName, function (err, _collection) {
           expect(err).not.to.be.ok();
           expect(_collection).to.be.a(Collection);
@@ -208,10 +210,85 @@ describe('Collection DML', function () {
     });
   });
 
+  it('getQueryMeta should ok', function (done) {
+    var matcher = {};
+    var orderBy = {"Indexblocks": 1};
+    var hint = {"": "ageIndex"};
+    collection.getQueryMeta(matcher, orderBy, hint, 0, -1, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be(null);
+        done();
+      });
+    });
+  });
+
   it('count should ok', function (done) {
     collection.count(function (err, count) {
       expect(err).not.to.be.ok();
       expect(count).to.be(0);
+      done();
+    });
+  });
+
+  describe('xxtach collection', function () {
+    var mcl, scl;
+    before('create sub collection', function (done) {
+      var options = {
+        "IsMainCL": true,
+        "ShardingKey": {"id": 1},
+        "ReplSize": 0
+      };
+      _space.createCollection('mcl', options, function (err, _collection) {
+        expect(err).not.to.be.ok();
+        expect(_collection).to.be.ok();
+        mcl = _collection;
+        done();
+      });
+    });
+
+    it('createSubCollection', function (done) {
+      var options = {
+        "ReplSize": 0
+      };
+      _space.createCollection('scl', options, function (err, _collection) {
+        expect(err).not.to.be.ok();
+        expect(_collection).to.be.ok();
+        scl = _collection;
+        done();
+      });
+    });
+
+    it('attachCollection should ok', function (done) {
+      var options = {
+        "LowBound": {id: 0},
+        "UpBound": {id: 10}
+      };
+      mcl.attachCollection(scl.collectionFullName, options, function (err) {
+        expect(err).not.to.be.ok();
+        done();
+      });
+    });
+
+    it('detachCollection should ok', function (done) {
+      mcl.detachCollection(scl.collectionFullName, function (err) {
+        expect(err).not.to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it('alter should ok', function (done) {
+    var options = {
+      "ReplSize": 0,
+      "ShardingKey": {"a": 1},
+      "ShardingType": "hash",
+      "Partition": 4096
+    };
+    collection.alter(options, function (err) {
+      expect(err).not.to.be.ok();
       done();
     });
   });
