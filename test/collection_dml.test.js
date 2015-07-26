@@ -156,6 +156,13 @@ describe('Collection DML', function () {
     });
   });
 
+  it('delete all should ok', function (done) {
+    collection.delete(function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
   it('query should ok with none', function (done) {
     collection.query({}, {}, {}, {}, function (err, cursor) {
       expect(err).not.to.be.ok();
