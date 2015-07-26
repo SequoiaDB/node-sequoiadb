@@ -197,6 +197,17 @@ describe('Collection DML', function () {
     });
   });
 
+  it('aggregate should ok', function (done) {
+    var insertors = [
+      {name: "hi"},
+      {name: "jack"}
+    ];
+    collection.aggregate(insertors, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
   it('count should ok', function (done) {
     collection.count(function (err, count) {
       expect(err).not.to.be.ok();
