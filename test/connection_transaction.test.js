@@ -19,7 +19,7 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-describe('Connection Task', function () {
+describe('Connection Transaction', function () {
   var conn = common.createConnection();
 
   before(function (done) {
@@ -32,29 +32,22 @@ describe('Connection Task', function () {
     conn.disconnect(done);
   });
 
-  var task;
-  it('getTasks should ok', function (done) {
-    conn.getTasks({}, {}, {}, {}, function (err, cursor) {
-      expect(err).to.not.be.ok();
-      cursor.current(function (err, item) {
-        expect(err).to.not.be.ok();
-        // expect(item).to.be.ok();
-        task = item;
-        done();
-      });
-    });
-  });
-
-  xit('waitTasks should ok', function (done) {
-    var taskIds = [task.TaskID];
-    conn.waitTasks(taskIds, {}, {}, {}, function (err, cursor) {
+  it('transactionBegin should ok', function (done) {
+    conn.transactionBegin(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
-  xit('cancelTask should ok', function (done) {
-    conn.cancelTask(task.TaskID, true, function (err) {
+  it('transactionCommit should ok', function (done) {
+    conn.transactionCommit(function (err) {
+      expect(err).to.not.be.ok();
+      done();
+    });
+  });
+
+  it('transactionRollback should ok', function (done) {
+    conn.transactionRollback(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
