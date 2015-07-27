@@ -18,59 +18,39 @@
 
 var expect = require('expect.js');
 var common = require('./common');
-var Collection = require('../lib/collection');
-var CollectionSpace = require('../lib/collection_space');
 
 describe('Connection List', function () {
-   var conn = common.createConnection();
+  var conn = common.createConnection();
+  var spaceName = 'spaceName' + Math.floor(Math.random() * 100);
+  var collectionName = 'test_coll';
 
-   var collection;
-
-   var spaceName = 'foo6';
-   var collectionName = "bar5";
-   
-   before(function (done) {
-      this.timeout(8000);
-      conn.ready(function () {
-	     var createCollection = function (space) {
-	         space.createCollection(collectionName, function (err, _collection) {
-	            expect(err).not.to.be.ok();
-	            expect(_collection).to.be.a(Collection);
-	            collection = _collection;
-	            done();
-	         });
-	      };
-	
-	      conn.createCollectionSpace(spaceName, function (err, space) {
-	         if (err) {
-	            conn.getCollectionSpace(spaceName, function (err, _space) {
-	               expect(err).not.to.be.ok();
-	               createCollection(_space);
-	            });
-	         }
-	         else {
-	            expect(space).to.be.a(CollectionSpace);
-	            expect(space.name).to.be(spaceName);
-	            createCollection(space);
-	         }
-	      });
-	   });
+  before(function (done) {
+    this.timeout(8000);
+    conn.ready(function () {
+      conn.createCollectionSpace(spaceName, function (err, space) {
+        expect(err).not.to.be.ok();
+        expect(space.name).to.be(spaceName);
+        space.createCollection(collectionName, function (err, collection) {
+          expect(err).not.to.be.ok();
+          done();
+        });
+      });
     });
+  });
 
-	after(function (done) {
-       conn.dropCollectionSpace(spaceName, function (err) {
-	      expect(err).not.to.be.ok();
-	      conn.disconnect();
-	      done();
-	   });
-	});
+  after(function (done) {
+    conn.dropCollectionSpace(spaceName, function (err) {
+      expect(err).not.to.be.ok();
+      conn.disconnect(done);
+    });
+  });
 
   it('getCollectionSpaces should ok', function (done) {
     conn.getCollectionSpaces(function (err, cursor) {
       expect(err).to.not.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();
-        expect(item.Name).to.be.ok();
+        expect(item).to.be.ok();
         done();
       });
     });
@@ -79,7 +59,7 @@ describe('Connection List', function () {
   it('getCollectionSpaceNames should ok', function (done) {
     conn.getCollectionSpaceNames(function (err, names) {
       expect(err).to.not.be.ok();
-      expect(names.length).to.be(1);
+      expect(names.length).to.be.above(1);
       done();
     });
   });
@@ -98,7 +78,7 @@ describe('Connection List', function () {
   it('getCollectionNames should ok', function (done) {
     conn.getCollectionNames(function (err, names) {
       expect(err).to.not.be.ok();
-      expect(names.length).to.be(1);
+      expect(names.length).to.be.above(0);
       done();
     });
   });
