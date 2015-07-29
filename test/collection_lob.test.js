@@ -102,6 +102,14 @@ describe('Collection Lob', function () {
     });
   });
 
+  it('Lob.read should ok', function (done) {
+    lob.read(10, function (err, buff) {
+      expect(err).not.to.be.ok();
+      expect(buff).to.eql(new Buffer("1234567890"));
+      done();
+    });
+  });
+
   it('Lob.close should ok', function (done) {
     lob.close(function (err) {
       expect(err).not.to.be.ok();
