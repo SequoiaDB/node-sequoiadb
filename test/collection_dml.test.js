@@ -28,8 +28,8 @@ describe('Collection DML', function () {
   var collection;
   var _space;
 
-  var spaceName = 'foo5';
-  var collectionName = "bar5";
+  var spaceName = 'foo6';
+  var collectionName = "bar6";
 
   before(function (done) {
     this.timeout(8000);
