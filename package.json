@@ -23,9 +23,8 @@
   },
   "homepage": "https://github.com/SequoiaDB/node-sequoiadb#readme",
   "dependencies": {
-    "bson": "~0.3.2",
-    "debug": "^2.2.0",
-    "long": "^2.2.5"
+    "bson": "0.4.8",
+    "debug": "^2.2.0"
   },
   "devDependencies": {
     "mocha": "*",
