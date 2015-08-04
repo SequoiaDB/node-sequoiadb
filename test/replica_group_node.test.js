@@ -99,6 +99,15 @@ describe('Replica Group Node', function () {
     });
   });
 
+  it('node.connect should ok', function (done) {
+    this.timeout(8000);
+    var conn = node.connect("", "");
+    conn.onError(done);
+    conn.ready(function () {
+      conn.disconnect(done);
+    });
+  });
+
   it('node.stop should ok', function (done) {
     this.timeout(8000);
     node.stop(function (err, status) {
@@ -107,16 +116,6 @@ describe('Replica Group Node', function () {
       done();
     });
   });
-
-  xit('node.connect should ok', function (done) {
-    this.timeout(8000);
-    var conn = node.connect('123.56.143.17', 11880);
-    conn.onError(done);
-    conn.ready(function () {
-      conn.disconnect(done);
-    });
-  });
-
   it('removeNode should ok', function (done) {
     var host = '123.56.143.17';
     group.removeNode(host, 11880, {}, function (err) {

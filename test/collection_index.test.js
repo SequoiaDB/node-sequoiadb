@@ -62,6 +62,14 @@ describe('Collection index', function () {
     });
   });
 
+  it("set read from master first", function(done){
+    var option = {"PreferedInstance":"M"};
+    conn.setSessionAttr(option, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
   it('createIndex should ok', function (done) {
     var key = {
       "Last Name": 1,

@@ -206,7 +206,7 @@ describe('Collection DML', function () {
     });
   });
 
-  it('aggregate should ok', function (done) {
+  xit('aggregate should ok', function (done) {
     var insertors = [
       {name: "hi"},
       {name: "jack"}
