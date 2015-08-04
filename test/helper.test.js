@@ -344,5 +344,85 @@ describe('/lib/helper.js', function () {
       0x10, 0x4d, 0x6f, 0x64, 0x65, 0x00, 0x01, 0x00,
       0x00, 0x00, 0x00, 0x00]));
   });
-  // 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,58,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,146,226,98,13,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,168,179,5,1,58,0,0,0,2,67,111,108,108,101,99,116,105,111,110,0,10,0,0,0,102,111,111,55,46,98,97,114,56,0,7,79,105,100,0,85,165,30,20,180,119,42,25,87,40,42,177,16,77,111,100,101,0,1,0,0,0,0,0,0
+
+  it('buildReadLobRequest', function () {
+    // add info into object
+    var message = new Message(constants.Operation.MSG_BS_LOB_READ_REQ);
+    // MsgHeader
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO;
+    // the rest part of _MsgOpLOb
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = constants.DEFAULT_FLAGS;
+    message.ContextIDList = [Long.NEG_ONE];
+    message.BsonLen = 0;
+    // MsgLobTuple
+    message.LobLen = 10;
+    message.LobSequence = 0;
+    message.LobOffset = Long.ZERO;
+
+    var buff = helper.buildReadLobRequest(message, false);
+    expect(buff.length).to.be(68);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x44, 0x00, 0x00, 0x00, // message length
+                              0x43, 0x1f, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // contextID
+      0x00, 0x00, 0x00, 0x00, // bsonLen
+      //
+      0x0a, 0x00, 0x00, 0x00, // length
+                              0x00, 0x00, 0x00, 0x00, // sequence
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  // offset
+    ]));
+  });
+
+  it('buildCloseLobRequest', function () {
+    // add info into object
+    var message = new Message(constants.Operation.MSG_BS_LOB_READ_REQ);
+    // MsgHeader
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO;
+    // the rest part of _MsgOpLOb
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = constants.DEFAULT_FLAGS;
+    message.ContextIDList = [Long.NEG_ONE];
+    message.BsonLen = 0;
+    // MsgLobTuple
+    message.LobLen = 10;
+    message.LobSequence = 0;
+    message.LobOffset = Long.ZERO;
+
+    var buff = helper.buildCloseLobRequest(message, false);
+    expect(buff.length).to.be(52);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x34, 0x00, 0x00, 0x00, // message length
+                              0x43, 0x1f, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // contextID
+      0x00, 0x00, 0x00, 0x00 // bsonLen
+    ]));
+  });
+
 });
