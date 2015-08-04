@@ -14,6 +14,8 @@
  *   limitations under the License.
  */
 
+'use strict';
+
 var expect = require('expect.js');
 var common = require('./common');
 
@@ -25,7 +27,7 @@ describe('Domain Actions', function () {
   before(function (done) {
     this.timeout(8000);
     conn.ready(function () {
-      conn.getDomain(domainName, function (err, _domain) {
+      conn.createDomain(domainName, function (err, _domain) {
         expect(err).not.to.be.ok();
         expect(_domain).to.be.ok();
         expect(_domain.name).to.be(domainName);

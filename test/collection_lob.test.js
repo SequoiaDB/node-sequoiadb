@@ -18,7 +18,6 @@
 
 var expect = require('expect.js');
 var common = require('./common');
-var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
 describe('Collection Lob', function () {
@@ -34,7 +33,7 @@ describe('Collection Lob', function () {
       var createCollection = function (space) {
         space.createCollection(collectionName, function (err, _collection) {
           expect(err).not.to.be.ok();
-          expect(_collection).to.be.a(Collection);
+          expect(_collection).to.be.ok();
           collection = _collection;
           done();
         });
@@ -83,9 +82,17 @@ describe('Collection Lob', function () {
     });
   });
   
-  it('Lob.write should ok', function (done) {
+  xit('Lob.write should ok', function (done) {
     lob.write(new Buffer("1234567890"), function (err) {
       expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  xit('Lob.read should ok', function (done) {
+    lob.read(10, function (err, buff) {
+      expect(err).not.to.be.ok();
+      expect(buff).to.eql(new Buffer("1234567890"));
       done();
     });
   });

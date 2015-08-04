@@ -26,8 +26,8 @@ describe('Collection split', function () {
   var collection;
   var _space;
 
-  var spaceName = 'foo5';
-  var collectionName = "bar5";
+  var spaceName = 'split';
+  var collectionName = "split";
 
   before(function (done) {
     this.timeout(8000);
