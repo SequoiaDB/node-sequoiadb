@@ -59,6 +59,7 @@ describe('Connection List', function () {
   it('getCollectionSpaceNames should ok', function (done) {
     conn.getCollectionSpaceNames(function (err, names) {
       expect(err).to.not.be.ok();
+      //expect(names.length).to.be(1);
       expect(names.length).to.be.above(0);
       done();
     });

@@ -81,19 +81,7 @@ describe('Collection Lob', function () {
       done();
     });
   });
-
-  it('getLobs should ok with item', function (done) {
-    collection.getLobs(function (err, cursor) {
-      expect(err).not.to.be.ok();
-      expect(cursor).to.be.ok();
-      cursor.current(function (err, item) {
-        expect(err).not.to.be.ok();
-        expect(item).to.be(null);
-        done();
-      });
-    });
-  });
-
+  
   xit('Lob.write should ok', function (done) {
     lob.write(new Buffer("1234567890"), function (err) {
       expect(err).not.to.be.ok();
@@ -113,6 +101,26 @@ describe('Collection Lob', function () {
     lob.close(function (err) {
       expect(err).not.to.be.ok();
       done();
+    });
+  });
+
+  it("set read from master first", function(done){
+    var option = {"PreferedInstance":"M"};
+    conn.setSessionAttr(option, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+ it('getLobs should ok with item', function (done) {
+    collection.getLobs(function (err, cursor) {
+      expect(err).not.to.be.ok();
+      expect(cursor).to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be.ok();
+        done();
+      });
     });
   });
 
