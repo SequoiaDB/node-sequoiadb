@@ -27,7 +27,7 @@ describe('Domain Actions', function () {
   before(function (done) {
     this.timeout(8000);
     conn.ready(function () {
-      conn.createDomain(domainName, function (err, _domain) {
+      conn.createDomain(domainName, {Groups:['data_group']}, function (err, _domain) {
         expect(err).not.to.be.ok();
         expect(_domain).to.be.ok();
         expect(_domain.name).to.be(domainName);
@@ -87,14 +87,11 @@ describe('Domain Actions', function () {
         "ShardingType": "hash",
         "AutoSplit": true
       };
-      _space.createCollection('cl', opts, function (err, cursor) {
+      _space.createCollection('cl', opts, function (err, cl) {
         expect(err).not.to.be.ok();
-        expect(cursor).to.be.ok();
-        cursor.current(function (err, item) {
-          expect(err).not.to.be.ok();
-          expect(item.Name).to.be('space');
-          done();
-        });
+        expect(cl).to.be.ok();
+        //expect(cl.Name).to.be('space.cl');
+        done();
       });
     });
 
@@ -104,7 +101,7 @@ describe('Domain Actions', function () {
         expect(cursor).to.be.ok();
         cursor.current(function (err, item) {
           expect(err).not.to.be.ok();
-          expect(item).to.be(null);
+          expect(item.Name).to.be('space.cl');
           done();
         });
       });
@@ -134,6 +131,17 @@ describe('Domain Actions', function () {
     var options = {
       "Groups": [ "group1", "group2", "group3" ],
       "AutoSplit": true
+    };
+    domain.alter(options, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('alter reset should ok', function(done){
+   var options = {
+      "Groups": [ "data_group" ],
+      "AutoSplit": false
     };
     domain.alter(options, function (err) {
       expect(err).not.to.be.ok();
