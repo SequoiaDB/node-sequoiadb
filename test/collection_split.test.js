@@ -65,7 +65,7 @@ describe('Collection split', function () {
     });
   });
 
-  it('split should ok', function (done) {
+  xit('split should ok', function (done) {
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
     collection.split('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
@@ -74,14 +74,14 @@ describe('Collection split', function () {
     });
   });
 
-  it('splitByPercent should ok', function (done) {
+  xit('splitByPercent should ok', function (done) {
     collection.splitByPercent('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  it('splitAsync should ok', function (done) {
+  xit('splitAsync should ok', function (done) {
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
     collection.splitAsync('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
@@ -90,7 +90,7 @@ describe('Collection split', function () {
     });
   });
 
-  it('splitByPercentAsync should ok', function (done) {
+  xit('splitByPercentAsync should ok', function (done) {
     collection.splitByPercentAsync('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();

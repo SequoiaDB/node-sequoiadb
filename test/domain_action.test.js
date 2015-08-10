@@ -19,9 +19,9 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-describe('Domain Actions', function () {
+xdescribe('Domain Actions', function () {
   var conn = common.createConnection();
-  var domainName = 'domain_name';
+  var domainName = 'domain_name2';
   var domain;
 
   before(function (done) {
@@ -58,10 +58,11 @@ describe('Domain Actions', function () {
 
   describe('CollectionSpace with domain', function () {
     var _space;
+    var spacename = 'spacename';
 
     it('createCollectionSpace', function (done) {
       var options = {'Domain': domainName};
-      conn.createCollectionSpace('space', options, function (err, space) {
+      conn.createCollectionSpace(spacename, options, function (err, space) {
         expect(err).not.to.be.ok();
         expect(space).to.be.ok();
         _space = space;
@@ -75,7 +76,7 @@ describe('Domain Actions', function () {
         expect(cursor).to.be.ok();
         cursor.current(function (err, item) {
           expect(err).not.to.be.ok();
-          expect(item.Name).to.be('space');
+          expect(item.Name).to.be(spacename);
           done();
         });
       });

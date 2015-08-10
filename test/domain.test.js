@@ -35,11 +35,7 @@ describe('Domain', function () {
     conn.getDomains(null, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.ok();
-      cursor.current(function (err, item) {
-        expect(err).not.to.be.ok();
-        expect(item).to.be(null);
-        done();
-      });
+      done();
     });
   });
 
