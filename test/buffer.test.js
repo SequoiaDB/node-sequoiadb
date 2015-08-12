@@ -49,10 +49,16 @@ describe('/lib/buffer.js', function () {
     expect(xbuff.buff).to.eql(buff);
   });
 
-  it('writeUInt32 should ok', function () {
+  it('writeUInt32/readUInt32 should ok', function () {
     var xbuff = new XBuffer(new Buffer(10), true);
     xbuff.writeUInt32(10, 0);
     expect(xbuff.readUInt32(0)).to.be(10);
+    expect(function () {
+      xbuff.writeUInt32(0x00);
+    }).to.throwError(/Must pass the offset/);
+    expect(function () {
+      xbuff.readUInt32();
+    }).to.throwError(/Must pass the offset/);
   });
 
   it('isBigEndian should ok', function () {
@@ -80,6 +86,12 @@ describe('/lib/buffer.js', function () {
     lbuff.writeUInt(0xFFFEFDFC, 0, 4);
     expect(lbuff.readUInt(0, 4)).to.be(0xFFFEFDFC);
     expect(bbuff.toBuffer()).to.eql(lbuff.toBuffer());
+    expect(function () {
+      bbuff.writeUInt(0x00);
+    }).to.throwError(/Must pass the offset/);
+    expect(function () {
+      bbuff.readUInt();
+    }).to.throwError(/Must pass the offset/);
   });
 
   it('writeUInt8/readUInt8 should ok', function () {
@@ -89,6 +101,12 @@ describe('/lib/buffer.js', function () {
     var lbuff = new XBuffer(1, true);
     lbuff.writeUInt8(1, 0);
     expect(lbuff.readUInt8(0)).to.be(1);
+    expect(function () {
+      bbuff.writeUInt8(0x00);
+    }).to.throwError(/Must pass the offset/);
+    expect(function () {
+      bbuff.readUInt8();
+    }).to.throwError(/Must pass the offset/);
   });
 
   it('slice should ok', function () {
@@ -102,6 +120,9 @@ describe('/lib/buffer.js', function () {
     var buff = new XBuffer(4, true);
     buff.writeBuffer(new Buffer([1, 2, 3, 4]), 0);
     expect(buff.buff).to.eql(new Buffer([1, 2, 3, 4]));
+    expect(function () {
+      buff.writeBuffer(new Buffer([1, 2, 3, 4]));
+    }).to.throwError(/Must pass the offset/);
   });
 
   it('writeLong should ok', function () {
@@ -111,6 +132,9 @@ describe('/lib/buffer.js', function () {
     var lbuff = new XBuffer(8, false);
     lbuff.writeLong(new Long(0x0, 0x1), 0);
     expect(lbuff.buff).to.eql(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]));
+    expect(function () {
+      lbuff.writeLong(new Long(0x0, 0x1));
+    }).to.throwError(/Must pass the offset/);
   });
 
   it('readLong should ok', function () {
@@ -122,5 +146,8 @@ describe('/lib/buffer.js', function () {
     var lval = lbuff.readLong(0);
     expect(lval.high).to.be(0);
     expect(lval.low).to.be(1);
+    expect(function () {
+      lbuff.readLong();
+    }).to.throwError(/Must pass the offset/);
   });
 });
