@@ -20,80 +20,159 @@ var expect = require('expect.js');
 var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
+var Node = require('../lib/node');
 
 describe('Collection split', function () {
   var conn = common.createConnection();
-  var collection;
+  var _collection;
   var _space;
 
-  var spaceName = 'split';
-  var collectionName = "split";
+  var srcGroup;
+  var dstGroup;
+
+  var spaceName = 'foo5';
+  var collectionName = "bar5";
 
   before(function (done) {
-    this.timeout(8000);
     conn.ready(function () {
-      var createCollection = function (space) {
-        _space = space;
-        var options = {ShardingKey: {"age": 1}, ShardingType: "hash", Partition: 4096};
-        space.createCollection(collectionName, options, function (err, _collection) {
-          expect(err).not.to.be.ok();
-          expect(_collection).to.be.a(Collection);
-          collection = _collection;
-          done();
-        });
-      };
-      conn.createCollectionSpace(spaceName, function (err, space) {
-        if (err) {
-          conn.getCollectionSpace(spaceName, function (err, _space) {
-            expect(err).not.to.be.ok();
-            createCollection(_space);
-          });
-        } else {
-          expect(space).to.be.a(CollectionSpace);
-          expect(space.name).to.be(spaceName);
-          createCollection(space);
-        }
-      });
-    });
-  });
-
-  after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
-      expect(err).not.to.be.ok();
-      conn.disconnect();
       done();
     });
   });
 
+  after(function (done) {
+    conn.disconnect();
+    done();
+  });
+
+  it('create collection space should ok', function(done){
+    conn.createCollectionSpace(spaceName, function (err, space) {
+      expect(space).not.to.be(null);
+      //expect(space.Name).to.be(spaceName);
+      _space = space;
+      done();
+    });
+  });
+
+  it('create source group should ok', function(done){
+    conn.createReplicaGroup("source", function(err, group){
+      expect(err).not.to.be.ok();
+      expect(group).not.to.be(null);
+      srcGroup = group;
+      done();
+    });
+  });
+  
+  it('source group create node should ok', function (done) {
+    var host = '123.56.143.17';
+    var port = 22000;
+    var dbpath = '/opt/sequoiadb/database/data/22000';
+    srcGroup.createNode(host, port, dbpath, {}, function(err, _){
+      expect(err).not.to.be.ok();
+      expect(_).to.be.a(Node);
+
+      conn.activateReplicaGroup('source', function (err, _) {
+        expect(err).not.to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it('create collection on source group should ok', function(done){
+    var options = {ShardingKey: {"age": 1}, ShardingType: "hash", Partition: 4096, Group:"source"};
+    _space.createCollection(collectionName, options, function (err, collection) {
+      expect(err).not.to.be.ok();
+      expect(collection).to.be.a(Collection);
+      _collection = collection;
+      done();
+    });
+  });
+
+  it('create dest group should ok', function(done){
+    conn.createReplicaGroup("dest", function(err, group){
+      expect(err).not.to.be.ok();
+      expect(group).not.to.be(null);
+      dstGroup = group;
+      done();
+    });
+  });
+
+  it('dest group create node should ok', function (done) {
+    var host = '123.56.143.17';
+    var port = 22010;
+    var dbpath = '/opt/sequoiadb/database/data/22010';
+    dstGroup.createNode(host, port, dbpath, {}, function(err, _){
+      expect(err).not.to.be.ok();
+      expect(_).to.be.a(Node);
+
+      conn.activateReplicaGroup('dest', function (err, _) {
+        expect(err).not.to.be.ok();
+      });
+      done();
+    });
+  });
+  
   xit('split should ok', function (done) {
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
-    collection.split('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
+    _collection.split('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   xit('splitByPercent should ok', function (done) {
-    collection.splitByPercent('source', 'dest', 50, function (err, cursor) {
+    _collection.splitByPercent('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   xit('splitAsync should ok', function (done) {
+    this.timeout(8000);
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
-    collection.splitAsync('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
+    _collection.splitAsync('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   xit('splitByPercentAsync should ok', function (done) {
-    collection.splitByPercentAsync('source', 'dest', 50, function (err, cursor) {
+    this.timeout(8000);
+    _collection.splitByPercentAsync('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
+  });
+
+  it('wait for 10s', function(done) {
+    for (var i = 0; i < 10; ++i) {
+      var a = i;
+      setTimeout(function(){}, 2000);
+    }
+    done();
+  })
+
+  it('drop collection space should ok', function(done){
+    conn.dropCollectionSpace(spaceName, function(err){
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('remove source group should ok', function(done){
+    this.timeout(8000);
+    conn.removeReplicaGroup('source', function(err, _){
+      expect(err).not.to.be.ok();
+      done();
+    })
+  });
+
+  it('remove dest group should ok', function(done){
+    this.timeout(8000);
+    conn.removeReplicaGroup('dest', function(err, _){
+      expect(err).not.to.be.ok();
+      done();
+    })
   });
 });

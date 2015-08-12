@@ -19,15 +19,15 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-xdescribe('Domain Actions', function () {
+describe('Domain Actions', function () {
   var conn = common.createConnection();
-  var domainName = 'domain_name2';
+  var domainName = 'domain_name';
   var domain;
 
   before(function (done) {
     this.timeout(8000);
     conn.ready(function () {
-      conn.createDomain(domainName, {Groups:['data_group']}, function (err, _domain) {
+      conn.createDomain(domainName, {Groups:['data']}, function (err, _domain) {
         expect(err).not.to.be.ok();
         expect(_domain).to.be.ok();
         expect(_domain.name).to.be(domainName);
@@ -58,11 +58,20 @@ xdescribe('Domain Actions', function () {
 
   describe('CollectionSpace with domain', function () {
     var _space;
-    var spacename = 'spacename';
+    it('alter to data group should ok', function (done) {
+        var options = {
+          "Groups": [ "data" ],
+          "AutoSplit": true
+        };
+        domain.alter(options, function (err) {
+        expect(err).not.to.be.ok();
+        done();
+      });
+    });
 
     it('createCollectionSpace', function (done) {
       var options = {'Domain': domainName};
-      conn.createCollectionSpace(spacename, options, function (err, space) {
+      conn.createCollectionSpace('space', options, function (err, space) {
         expect(err).not.to.be.ok();
         expect(space).to.be.ok();
         _space = space;
@@ -76,7 +85,7 @@ xdescribe('Domain Actions', function () {
         expect(cursor).to.be.ok();
         cursor.current(function (err, item) {
           expect(err).not.to.be.ok();
-          expect(item.Name).to.be(spacename);
+          expect(item.Name).to.be('space');
           done();
         });
       });
@@ -141,7 +150,7 @@ xdescribe('Domain Actions', function () {
 
   it('alter reset should ok', function(done){
    var options = {
-      "Groups": [ "data_group" ],
+      "Groups": [],
       "AutoSplit": false
     };
     domain.alter(options, function (err) {
