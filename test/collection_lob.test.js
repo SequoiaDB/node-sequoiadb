@@ -25,7 +25,7 @@ describe('Collection Lob', function () {
   var collection;
 
   var spaceName = 'foo7';
-  var collectionName = "bar9";
+  var collectionName = "bar_" + Math.floor(Math.random() * 10);
 
   before(function (done) {
     this.timeout(8000);
@@ -61,7 +61,7 @@ describe('Collection Lob', function () {
     });
   });
 
-  it('getLobs should ok', function (done) {
+  it('getLobs should ok with empty list', function (done) {
     collection.getLobs(function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.ok();
@@ -81,18 +81,18 @@ describe('Collection Lob', function () {
       done();
     });
   });
-  
-  xit('Lob.write should ok', function (done) {
-    lob.write(new Buffer("1234567890"), function (err) {
+
+  it('Lob.write should ok', function (done) {
+    lob.write(new Buffer("0123456789abcdef"), function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   xit('Lob.read should ok', function (done) {
-    lob.read(10, function (err, buff) {
+    lob.read(16, function (err, buff) {
       expect(err).not.to.be.ok();
-      expect(buff).to.eql(new Buffer("1234567890"));
+      expect(buff).to.eql(new Buffer("0123456789abcdef"));
       done();
     });
   });

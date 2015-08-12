@@ -21,6 +21,7 @@ var helper = require('../lib/helper');
 var constants = require('../lib/const');
 var Message = require('../lib/message');
 var Long = require('../lib/long');
+var ObjectID = require('bson').BSONPure.ObjectID;
 
 describe('/lib/helper.js', function () {
   it('buildSystemInfoRequest should ok', function () {
@@ -364,7 +365,7 @@ describe('/lib/helper.js', function () {
     message.LobOffset = Long.ZERO;
 
     var buff = helper.buildReadLobRequest(message, false);
-    expect(buff.length).to.be(68);
+    expect(buff.length).to.be(52 + 16);
     expect(buff).to.eql(new Buffer([
       // ===== header =========
       0x44, 0x00, 0x00, 0x00, // message length
@@ -425,4 +426,94 @@ describe('/lib/helper.js', function () {
     ]));
   });
 
+  it('buildRemoveLobRequest', function () {
+    var matcher = {};
+    matcher[constants.FIELD_COLLECTION] = 'test';
+    matcher[constants.FIELD_LOB_OID] = ObjectID.createFromHexString('55a51e14b4772a1957282ab1');
+
+    var message = new Message(constants.Operation.MSG_BS_LOB_REMOVE_REQ);
+    // MsgHeader
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO;
+    // the rest part of _MsgOpLOb
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = constants.DEFAULT_FLAGS;
+    message.ContextIDList = [constants.DEFAULT_CONTEXTID];
+    message.Matcher = matcher;
+
+    var buff = helper.buildRemoveLobRequest(message, false);
+    expect(buff.length).to.be(96);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x60, 0x00, 0x00, 0x00, // message length
+                              0x44, 0x1f, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // contextID
+      0x2b, 0x00, 0x00, 0x00, // bsonLen
+      // === bson
+      0x2b, 0x00, 0x00, 0x00,
+        0x02, // string
+              0x43, 0x6f, 0x6c, 0x6c, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x00,
+              0x05, 0x00, 0x00, 0x00,
+              0x74, 0x65, 0x73, 0x74, 0x00,
+        0x07, // object id
+              79,   105,  100,  0x00, 0x55, 165,  0x1e, 0x14, 0xb4, 119,
+              42,   0x19,   87, 0x28, 42, 177,
+        0x00,
+      0x00
+    ]));
+  });
+
+  it('buildWriteLobRequest', function () {
+    var buf = new Buffer('1234567890');
+    var message = new Message(constants.Operation.MSG_BS_LOB_WRITE_REQ);
+    // MsgHeader
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO;
+    // the rest part of _MsgOpLOb
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.Flags = constants.DEFAULT_FLAGS;
+    message.ContextIDList = [Long.ZERO];
+    message.BsonLen = 0;
+    // MsgLobTuple
+    message.LobLen = buf.length;
+    message.LobSequence = 0;
+    message.LobOffset = Long.NEG_ONE;
+
+    var buff = helper.buildWriteLobRequest(message, buf, false);
+    expect(buff.length).to.be(52 + 16 + 12);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x50, 0x00, 0x00, 0x00, // message length
+                              0x42, 0x1f, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // contextID
+      0x00, 0x00, 0x00, 0x00, // bsonLen
+                              0x0a, 0x00, 0x00, 0x00, // length
+      0x00, 0x00, 0x00, 0x00, // sequece
+      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // offset
+      49,   50,   51,   52,   53,   54,   55,   56,
+      57,   48,   0,    0     // buff
+    ]));
+  });
 });
