@@ -102,7 +102,7 @@ describe('Replica Group Node', function () {
   it('node.connect should ok', function (done) {
     this.timeout(8000);
     var conn = node.connect("", "");
-    conn.onError(done);
+    conn.on('error', done);
     conn.ready(function () {
       conn.disconnect(done);
     });
