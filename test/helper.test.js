@@ -213,6 +213,48 @@ describe('/lib/helper.js', function () {
       98, 0, 0, 0]));
   });
 
+  it('buildAggrRequest', function () {
+    var insertor = {"name":"sequoiadb"};
+    insertor[constants.OID] = '559be45c7560a7727c2b61bb';
+    var message = new Message(constants.Operation.OP_INSERT);
+    message.Version = constants.DEFAULT_VERSION;
+    message.W = constants.DEFAULT_W;
+    message.Padding = 0;
+    message.CollectionFullName = 'collectionspace' + "." + 'collection';
+    message.NodeID = constants.ZERO_NODEID;
+    message.RequestID = Long.ZERO;
+    message.Insertor = insertor;
+
+    var buff = helper.buildAggrRequest(message, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x84, 0x00, 0x00, 0x00, // message length
+                              0xd2, 0x07, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // request id
+      // ===== playload
+                              0x01, 0x00, 0x00, 0x00, // version
+      0x00, 0x00, // W
+                  0x00, 0x00, // padding
+                              0x00, 0x00, 0x00, 0x00, // flag
+      0x1a, 0x00, 0x00, 0x00, // collection name length
+                              0x63, 0x6f, 0x6c, 0x6c,
+      0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x70,
+      0x61, 0x63, 0x65, 0x2e, 0x63, 0x6f, 0x6c, 0x6c,
+      0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x00, 0x00, // newCollectionName
+      // ===== 'insertor'
+      0x3b, 0x00, 0x00, 0x00, 0x02, 0x6e, 0x61, 0x6d,
+      0x65, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x73, 0x65,
+      0x71, 0x75, 0x6f, 0x69, 0x61, 0x64, 0x62, 0x00,
+      0x02, 0x5f, 0x69, 0x64, 0x00, 0x19, 0x00, 0x00,
+      0x00, 53,   53,   57,   98,   101,  52,   53,
+      99,   55,   53,   54,   48,   97,   55,   55,
+      50,   55,   99,   50,   98,   54,   49,   98,
+      98, 0, 0, 0]));
+  });
+
   it('buildDeleteRequest', function () {
     var message = new Message();
 
@@ -514,6 +556,56 @@ describe('/lib/helper.js', function () {
       0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, // offset
       49,   50,   51,   52,   53,   54,   55,   56,
       57,   48,   0,    0     // buff
+    ]));
+  });
+
+  it('buildTransactionRequest', function () {
+    var code = constants.Operation.OP_UPDATE;
+    var requestID = Long.ZERO;
+
+    var buff = helper.buildTransactionRequest(code, requestID, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x1c, 0x00, 0x00, 0x00, // message length
+                              0xd1, 0x07, 0x00, 0x00, // operate code
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00,                         // nodeid 12 bytes
+                              0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00                         // request id
+    ]));
+  });
+
+  it('appendInsertMessage', function () {
+    var buf = new Buffer([
+      0x1c, 0x00, 0x00, 0x00
+    ]);
+
+    var append = {"name":""};
+
+    var buff = helper.appendInsertMessage(buf, append, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x2c, 0x00, 0x00, 0x00, // message length
+                              0x10, 0x00, 0x00, 0x00, // operate code
+      0x02, 0x6e, 0x61, 0x6d, 0x65, 0x00,
+      0x01, 0x00, 0x00, 0x00, 0x00, 0x00
+    ]));
+  });
+
+  it('appendAggrMessage', function () {
+    var buf = new Buffer([
+      0x1c, 0x00, 0x00, 0x00
+    ]);
+
+    var append = {"name":""};
+
+    var buff = helper.appendAggrMessage(buf, append, false);
+    expect(buff).to.eql(new Buffer([
+      // ===== header =========
+      0x2c, 0x00, 0x00, 0x00, // message length
+                              0x10, 0x00, 0x00, 0x00, // operate code
+      0x02, 0x6e, 0x61, 0x6d, 0x65, 0x00,
+      0x01, 0x00, 0x00, 0x00, 0x00, 0x00
     ]));
   });
 });

@@ -69,6 +69,12 @@ describe('Domain Actions', function () {
       });
     });
 
+    it('alter should fail without options', function () {
+      expect(function () {
+        domain.alter();
+      }).to.throwError(/SDB_INVALIDARG/);
+    });
+
     it('createCollectionSpace', function (done) {
       var options = {'Domain': domainName};
       conn.createCollectionSpace('space', options, function (err, space) {

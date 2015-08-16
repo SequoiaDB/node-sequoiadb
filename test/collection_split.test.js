@@ -19,7 +19,6 @@
 var expect = require('expect.js');
 var common = require('./common');
 var Collection = require('../lib/collection');
-var CollectionSpace = require('../lib/collection_space');
 var Node = require('../lib/node');
 
 describe('Collection split', function () {
@@ -34,20 +33,20 @@ describe('Collection split', function () {
   var collectionName = "bar5";
 
   before(function (done) {
+    this.timeout(8000);
     conn.ready(function () {
       done();
     });
   });
 
   after(function (done) {
-    conn.disconnect();
-    done();
+    conn.disconnect(done);
   });
 
   it('create collection space should ok', function(done){
     conn.createCollectionSpace(spaceName, function (err, space) {
       expect(space).not.to.be(null);
-      //expect(space.Name).to.be(spaceName);
+      expect(space.name).to.be(spaceName);
       _space = space;
       done();
     });
@@ -61,8 +60,9 @@ describe('Collection split', function () {
       done();
     });
   });
-  
+
   it('source group create node should ok', function (done) {
+    this.timeout(8000);
     var host = '123.56.143.17';
     var port = 22000;
     var dbpath = '/opt/sequoiadb/database/data/22000';
@@ -110,7 +110,7 @@ describe('Collection split', function () {
       done();
     });
   });
-  
+
   xit('split should ok', function (done) {
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
