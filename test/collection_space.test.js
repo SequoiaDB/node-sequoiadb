@@ -63,7 +63,7 @@ describe('CollectionSpace', function () {
   it('getCollectionSpace inexist should ok', function (done) {
     conn.getCollectionSpace('inexist', function (err) {
       expect(err).to.be.ok();
-      expect(err.message).to.be('SDB_DMS_CS_NOTEXIST');
+      expect(err.message).to.be('Collection space does not exist');
       done();
     });
   });

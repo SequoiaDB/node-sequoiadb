@@ -72,7 +72,7 @@ describe('Domain Actions', function () {
     it('alter should fail without options', function () {
       expect(function () {
         domain.alter();
-      }).to.throwError(/SDB_INVALIDARG/);
+      }).to.throwError(/Invalid Argument/);
     });
 
     it('createCollectionSpace', function (done) {

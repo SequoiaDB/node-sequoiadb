@@ -75,7 +75,7 @@ describe('/lib/cursor', function () {
     expect(cursor.isClosed).to.be(true);
     cursor.current(function (err) {
       expect(err).to.be.ok();
-      expect(err.message).to.be('SDB_DMS_CONTEXT_IS_CLOSE');
+      expect(err.message).to.be('Context is closed');
       done();
     });
   });
@@ -84,7 +84,7 @@ describe('/lib/cursor', function () {
     expect(cursor.isClosed).to.be(true);
     cursor.next(function (err) {
       expect(err).to.be.ok();
-      expect(err.message).to.be('SDB_DMS_CONTEXT_IS_CLOSE');
+      expect(err.message).to.be('Context is closed');
       done();
     });
   });
