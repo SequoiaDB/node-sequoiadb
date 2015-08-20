@@ -38,6 +38,7 @@ describe('Replica Group Node', function () {
   });
 
   after(function (done) {
+    this.timeout(8000);
     conn.removeReplicaGroup(groupname, function (err) {
       expect(err).not.to.be.ok();
       conn.disconnect(done);

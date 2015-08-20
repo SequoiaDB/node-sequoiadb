@@ -89,8 +89,27 @@ describe('Collection Lob', function () {
     });
   });
 
+  it('Lob.close should ok', function (done) {
+    lob.close(function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('Lob.isClosed should ok', function () {
+    expect(lob.isClosed()).to.be(true);
+  });
+
+  var currentLob;
+  xit('Lob.open should ok', function (done) {
+    currentLob = collection.openLob(lob.id, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
   xit('Lob.read should ok', function (done) {
-    lob.read(16, function (err, buff) {
+    currentLob.read(16, function (err, buff) {
       expect(err).not.to.be.ok();
       expect(buff).to.eql(new Buffer("0123456789abcdef"));
       done();
@@ -98,7 +117,7 @@ describe('Collection Lob', function () {
   });
 
   it('Lob.close should ok', function (done) {
-    lob.close(function (err) {
+    currentLob.close(function (err) {
       expect(err).not.to.be.ok();
       done();
     });
