@@ -101,14 +101,22 @@ describe('Collection Lob', function () {
   });
 
   var currentLob;
-  xit('Lob.open should ok', function (done) {
+  it("set read from master first", function(done){
+    var option = {"PreferedInstance":"M"};
+    conn.setSessionAttr(option, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('Lob.open should ok', function (done) {
     currentLob = collection.openLob(lob.id, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  xit('Lob.read should ok', function (done) {
+  it('Lob.read should ok', function (done) {
     currentLob.read(16, function (err, buff) {
       expect(err).not.to.be.ok();
       expect(buff).to.eql(new Buffer("0123456789abcdef"));
