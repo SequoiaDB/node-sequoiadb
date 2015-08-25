@@ -96,22 +96,28 @@ describe('Collection split', function () {
     });
   });
 
-  it('dest group create node should ok', function (done) {
+  it('create node for dest group should ok', function (done) {
+    this.timeout(8000);
     var host = '123.56.143.17';
     var port = 22010;
     var dbpath = '/opt/sequoiadb/database/data/22010';
     dstGroup.createNode(host, port, dbpath, {}, function(err, _){
       expect(err).not.to.be.ok();
       expect(_).to.be.a(Node);
-
-      conn.activateReplicaGroup('dest', function (err, _) {
-        expect(err).not.to.be.ok();
-      });
       done();
     });
   });
 
-  xit('split should ok', function (done) {
+  it('activate dest group should ok', function (done) {
+    this.timeout(15000);
+    conn.activateReplicaGroup('dest', function (err, _) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it('split should ok', function (done) {
+    this.timeout(8000);
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
     _collection.split('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
@@ -120,14 +126,29 @@ describe('Collection split', function () {
     });
   });
 
-  xit('splitByPercent should ok', function (done) {
+  it('wait for 10s', function(done) {
+    this.timeout(11000);
+    setTimeout(function () {
+      done();
+    }, 10000);
+  });
+
+  it('splitByPercent should ok', function (done) {
+    this.timeout(8000);
     _collection.splitByPercent('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  xit('splitAsync should ok', function (done) {
+  it('wait for 10s', function(done) {
+    this.timeout(11000);
+    setTimeout(function () {
+      done();
+    }, 10000);
+  });
+
+  it('splitAsync should ok', function (done) {
     this.timeout(8000);
     var splitCondition = {age: 30};
     var splitEndCondition = {age: 60};
@@ -137,7 +158,14 @@ describe('Collection split', function () {
     });
   });
 
-  xit('splitByPercentAsync should ok', function (done) {
+  it('wait for 10s', function(done) {
+    this.timeout(11000);
+    setTimeout(function () {
+      done();
+    }, 10000);
+  });
+
+  it('splitByPercentAsync should ok', function (done) {
     this.timeout(8000);
     _collection.splitByPercentAsync('source', 'dest', 50, function (err, cursor) {
       expect(err).not.to.be.ok();
@@ -146,12 +174,11 @@ describe('Collection split', function () {
   });
 
   it('wait for 10s', function(done) {
-    for (var i = 0; i < 10; ++i) {
-      var a = i;
-      setTimeout(function(){}, 2000);
-    }
-    done();
-  })
+    this.timeout(11000);
+    setTimeout(function () {
+      done();
+    }, 10000);
+  });
 
   it('drop collection space should ok', function(done){
     conn.dropCollectionSpace(spaceName, function(err){
@@ -165,7 +192,7 @@ describe('Collection split', function () {
     conn.removeReplicaGroup('source', function(err, _){
       expect(err).not.to.be.ok();
       done();
-    })
+    });
   });
 
   it('remove dest group should ok', function(done){
@@ -173,6 +200,6 @@ describe('Collection split', function () {
     conn.removeReplicaGroup('dest', function(err, _){
       expect(err).not.to.be.ok();
       done();
-    })
+    });
   });
 });
