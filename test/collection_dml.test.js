@@ -206,10 +206,10 @@ describe('Collection DML', function () {
     });
   });
 
-  xit('aggregate should ok', function (done) {
+  it('aggregate should ok', function (done) {
     var insertors = [
-      {name: "hi"},
-      {name: "jack"}
+      {$match:{status:"A"}},
+      {$group:{_id:"$cust_id",total:{$sum:"$amount"}}}
     ];
     collection.aggregate(insertors, function (err) {
       expect(err).not.to.be.ok();
