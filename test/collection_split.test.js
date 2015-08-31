@@ -108,6 +108,13 @@ describe('Collection split', function () {
     });
   });
 
+  it('wait for 10s', function(done) {
+    this.timeout(11000);
+    setTimeout(function () {
+      done();
+    }, 10000);
+  });
+
   it('activate dest group should ok', function (done) {
     this.timeout(15000);
     conn.activateReplicaGroup('dest', function (err, _) {
@@ -150,8 +157,8 @@ describe('Collection split', function () {
 
   it('splitAsync should ok', function (done) {
     this.timeout(8000);
-    var splitCondition = {age: 30};
-    var splitEndCondition = {age: 60};
+    var splitCondition = {age: 10};
+    var splitEndCondition = {age: 30};
     _collection.splitAsync('source', 'dest', splitCondition, splitEndCondition, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
