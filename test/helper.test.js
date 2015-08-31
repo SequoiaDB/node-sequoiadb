@@ -560,10 +560,10 @@ describe('/lib/helper.js', function () {
   });
 
   it('buildTransactionRequest', function () {
-    var code = constants.Operation.OP_UPDATE;
-    var requestID = Long.ZERO;
+    var message = new Message(constants.Operation.OP_UPDATE);
+    message.RequestID = Long.ZERO;
 
-    var buff = helper.buildTransactionRequest(code, requestID, false);
+    var buff = helper.buildTransactionRequest(message, false);
     expect(buff).to.eql(new Buffer([
       // ===== header =========
       0x1c, 0x00, 0x00, 0x00, // message length

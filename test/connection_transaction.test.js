@@ -32,22 +32,29 @@ describe('Connection Transaction', function () {
     conn.disconnect(done);
   });
 
-  xit('transactionBegin should ok', function (done) {
-    conn.transactionBegin(function (err) {
+  it('beginTransaction should ok', function (done) {
+    conn.beginTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
-  xit('transactionCommit should ok', function (done) {
-    conn.transactionCommit(function (err) {
+  it('commitTransaction should ok', function (done) {
+    conn.commitTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
-  xit('transactionRollback should ok', function (done) {
-    conn.transactionRollback(function (err) {
+  it('beginTransaction should ok', function (done) {
+    conn.beginTransaction(function (err) {
+      expect(err).to.not.be.ok();
+      done();
+    });
+  });
+
+  it('rollbackTransaction should ok', function (done) {
+    conn.rollbackTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
