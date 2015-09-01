@@ -195,7 +195,7 @@ describe('Collection split', function () {
   });
 
   it('remove source group should ok', function(done){
-    this.timeout(8000);
+    this.timeout(10000);
     conn.removeReplicaGroup('source', function(err, _){
       expect(err).not.to.be.ok();
       done();
@@ -203,7 +203,7 @@ describe('Collection split', function () {
   });
 
   it('remove dest group should ok', function(done){
-    this.timeout(8000);
+    this.timeout(10000);
     conn.removeReplicaGroup('dest', function(err, _){
       expect(err).not.to.be.ok();
       done();
