@@ -69,7 +69,7 @@ describe('Connection Task', function () {
   });
 
   it('create source group should ok', function (done) {
-    conn.createReplicaGroupByName(source, function (err, group) {
+    conn.createReplicaGroup(source, function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       srcGroup = group;
