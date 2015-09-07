@@ -21,7 +21,7 @@ var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 var Query = require('../lib/query');
-var Long = require('../lib/long');
+var Long = require('long');
 
 describe('Collection DML', function () {
   var conn = common.createConnection();
@@ -221,12 +221,12 @@ describe('Collection DML', function () {
     var matcher = {};
     var orderBy = {"Indexblocks": 1};
     var hint = {"": "ageIndex"};
-    collection.getQueryMeta(matcher, orderBy, hint, 0, -1, function (err, cursor) {
+    collection.getQueryMeta(matcher, orderBy, hint, Long.ZERO, Long.NEG_ONE, function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
-        expect(item).to.be(null);
+        expect(item).to.be.ok();
         done();
       });
     });
@@ -235,7 +235,7 @@ describe('Collection DML', function () {
   it('count should ok', function (done) {
     collection.count(function (err, count) {
       expect(err).not.to.be.ok();
-      expect(count).to.be(0);
+      expect(count).to.be(3);
       done();
     });
   });

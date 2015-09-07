@@ -20,7 +20,7 @@ var expect = require('expect.js');
 var helper = require('../lib/helper');
 var constants = require('../lib/const');
 var Message = require('../lib/message');
-var Long = require('../lib/long');
+var Long = require('long');
 var ObjectID = require('bson').BSONPure.ObjectID;
 
 describe('/lib/helper.js', function () {

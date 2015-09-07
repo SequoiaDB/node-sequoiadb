@@ -19,6 +19,8 @@
 var expect = require('expect.js');
 var common = require('./common');
 var CollectionSpace = require('../lib/collection_space');
+var Lob = require('../lib/lob');
+var Long = require('long');
 
 describe('Collection Lob', function () {
   var conn = common.createConnection();
@@ -85,6 +87,7 @@ describe('Collection Lob', function () {
   it('Lob.write should ok', function (done) {
     lob.write(new Buffer("0123456789abcdef"), function (err) {
       expect(err).not.to.be.ok();
+      expect(Long.fromNumber(16).equals(lob.size)).to.be.ok();
       done();
     });
   });
@@ -122,6 +125,18 @@ describe('Collection Lob', function () {
       expect(buff).to.eql(new Buffer("0123456789abcdef"));
       done();
     });
+  });
+
+  it('Lob.seek should ok', function () {
+    currentLob.seek(1, Lob.SDB_LOB_SEEK_SET);
+    expect(Long.isLong(currentLob.readOffset)).to.be.ok();
+    expect(Long.fromNumber(1).equals(currentLob.readOffset)).to.be.ok();
+    currentLob.seek(1, Lob.SDB_LOB_SEEK_CUR);
+    expect(Long.isLong(currentLob.readOffset)).to.be.ok();
+    expect(Long.fromNumber(2).equals(currentLob.readOffset)).to.be.ok();
+    currentLob.seek(1, Lob.SDB_LOB_SEEK_END);
+    expect(Long.isLong(currentLob.readOffset)).to.be.ok();
+    expect(Long.fromNumber(15).equals(currentLob.readOffset)).to.be.ok();
   });
 
   it('Lob.close should ok', function (done) {

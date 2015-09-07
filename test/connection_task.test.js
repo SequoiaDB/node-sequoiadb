@@ -26,6 +26,9 @@ describe('Connection Task', function () {
   var _collection;
   var _space;
 
+  var source = 'source1';
+  var dest = 'dest1';
+
   var srcGroup;
   var dstGroup;
 
@@ -55,8 +58,9 @@ describe('Connection Task', function () {
     });
   });
 
-  it('create collection space should ok', function(done){
+  it('create collection space should ok', function (done) {
     conn.createCollectionSpace(spaceName, function (err, space) {
+      expect(err).not.to.be.ok();
       expect(space).not.to.be(null);
       expect(space.name).to.be(spaceName);
       _space = space;
@@ -64,8 +68,8 @@ describe('Connection Task', function () {
     });
   });
 
-  it('create source group should ok', function(done){
-    conn.createReplicaGroup("source", function(err, group){
+  it('create source group should ok', function (done) {
+    conn.createReplicaGroupByName(source, function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       srcGroup = group;
@@ -78,19 +82,24 @@ describe('Connection Task', function () {
     var host = '123.56.143.17';
     var port = 22000;
     var dbpath = '/opt/sequoiadb/database/data/22000';
-    srcGroup.createNode(host, port, dbpath, {}, function(err, _){
+    srcGroup.createNode(host, port, dbpath, {}, function (err, _){
       expect(err).not.to.be.ok();
       expect(_).to.be.a(Node);
 
-      conn.activateReplicaGroup('source', function (err, _) {
+      conn.activateReplicaGroup(source, function (err, _) {
         expect(err).not.to.be.ok();
         done();
       });
     });
   });
 
-  it('create collection on source group should ok', function(done){
-    var options = {ShardingKey: {"age": 1}, ShardingType: "hash", Partition: 4096, Group:"source"};
+  it('create collection on source group should ok', function (done){
+    var options = {
+      ShardingKey: {"age": 1},
+      ShardingType: "hash",
+      Partition: 4096,
+      Group: source
+    };
     _space.createCollection(collectionName, options, function (err, collection) {
       expect(err).not.to.be.ok();
       expect(collection).to.be.a(Collection);
@@ -99,8 +108,8 @@ describe('Connection Task', function () {
     });
   });
 
-  it('create dest group should ok', function(done){
-    conn.createReplicaGroup("dest", function(err, group){
+  it('create dest group should ok', function (done){
+    conn.createReplicaGroup(dest, function (err, group){
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       dstGroup = group;
@@ -113,7 +122,7 @@ describe('Connection Task', function () {
     var host = '123.56.143.17';
     var port = 22010;
     var dbpath = '/opt/sequoiadb/database/data/22010';
-    dstGroup.createNode(host, port, dbpath, {}, function(err, _){
+    dstGroup.createNode(host, port, dbpath, {}, function (err, _){
       expect(err).not.to.be.ok();
       expect(_).to.be.a(Node);
       done();
@@ -129,7 +138,7 @@ describe('Connection Task', function () {
 
   it('activate dest group should ok', function (done) {
     this.timeout(15000);
-    conn.activateReplicaGroup('dest', function (err, _) {
+    conn.activateReplicaGroup(dest, function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -140,17 +149,17 @@ describe('Connection Task', function () {
     this.timeout(8000);
     var splitCondition = {age: 10};
     var splitEndCondition = {age: 30};
-    _collection.splitAsync('source', 'dest', splitCondition, splitEndCondition, function (err, id) {
+    _collection.splitAsync(source, dest, splitCondition, splitEndCondition, function (err, id) {
       expect(err).not.to.be.ok();
       taskID = id;
       done();
     });
   });
 
-  xit('waitTasks should ok', function (done) {
+  it('waitTasks should ok', function (done) {
     this.timeout(8000);
     var taskIds = [taskID];
-    conn.waitTasks(taskIds, {}, {}, {}, function (err) {
+    conn.waitTasks(taskIds, function (err) {
       expect(err).to.not.be.ok();
       done();
     });
@@ -171,24 +180,24 @@ describe('Connection Task', function () {
     }, 10000);
   });
 
-  it('drop collection space should ok', function(done){
-    conn.dropCollectionSpace(spaceName, function(err){
+  it('drop collection space should ok', function (done){
+    conn.dropCollectionSpace(spaceName, function (err){
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  it('remove source group should ok', function(done){
+  it('remove source group should ok', function (done){
     this.timeout(10000);
-    conn.removeReplicaGroup('source', function(err, _){
+    conn.removeReplicaGroup(source, function (err, _){
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  it('remove dest group should ok', function(done){
+  it('remove dest group should ok', function (done) {
     this.timeout(10000);
-    conn.removeReplicaGroup('dest', function(err, _){
+    conn.removeReplicaGroup(dest, function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
