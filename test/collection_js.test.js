@@ -74,7 +74,7 @@ describe('Collection js', function () {
   });
 
   it("exec should ok", function (done) {
-    var sql = "SELECT FROM " + spaceName + "." + collectionName;
+    var sql = "SELECT * FROM " + spaceName + "." + collectionName;
     conn.exec(sql, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
