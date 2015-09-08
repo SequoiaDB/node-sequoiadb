@@ -18,7 +18,7 @@
 
 var expect = require('expect.js');
 var XBuffer = require('../lib/buffer');
-var Long = require('../lib/long');
+var Long = require('long');
 
 describe('/lib/buffer.js', function () {
   it('new XBuffer(buff, isBigEndian) should ok', function () {
@@ -127,13 +127,13 @@ describe('/lib/buffer.js', function () {
 
   it('writeLong should ok', function () {
     var bbuff = new XBuffer(8, true);
-    bbuff.writeLong(new Long(0x0, 0x1), 0);
+    bbuff.writeLong(new Long(0x1, 0x0), 0);
     expect(bbuff.buff).to.eql(new Buffer([0, 0, 0, 0, 0, 0, 0, 1]));
     var lbuff = new XBuffer(8, false);
-    lbuff.writeLong(new Long(0x0, 0x1), 0);
+    lbuff.writeLong(new Long(0x1, 0x0), 0);
     expect(lbuff.buff).to.eql(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]));
     expect(function () {
-      lbuff.writeLong(new Long(0x0, 0x1));
+      lbuff.writeLong(new Long(0x1, 0x0));
     }).to.throwError(/Must pass the offset/);
   });
 
@@ -141,7 +141,7 @@ describe('/lib/buffer.js', function () {
     var bbuff = new XBuffer(new Buffer([0, 0, 0, 0, 0, 0, 0, 1]), true);
     var bval = bbuff.readLong(0);
     expect(bval.high).to.be(0);
-    expect(bval.low).to.be(1);
+    expect(bval.getLowBits()).to.be(1);
     var lbuff = new XBuffer(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]), false);
     var lval = lbuff.readLong(0);
     expect(lval.high).to.be(0);

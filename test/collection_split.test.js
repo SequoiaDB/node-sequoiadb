@@ -45,6 +45,7 @@ describe('Collection split', function () {
 
   it('create collection space should ok', function(done){
     conn.createCollectionSpace(spaceName, function (err, space) {
+      expect(err).not.to.be.ok();
       expect(space).not.to.be(null);
       expect(space.name).to.be(spaceName);
       _space = space;
@@ -66,14 +67,18 @@ describe('Collection split', function () {
     var host = '123.56.143.17';
     var port = 22000;
     var dbpath = '/opt/sequoiadb/database/data/22000';
-    srcGroup.createNode(host, port, dbpath, {}, function(err, _){
+    srcGroup.createNode(host, port, dbpath, {}, function (err, _) {
       expect(err).not.to.be.ok();
       expect(_).to.be.a(Node);
+      done();
+    });
+  });
 
-      conn.activateReplicaGroup('source', function (err, _) {
-        expect(err).not.to.be.ok();
-        done();
-      });
+  it('activate source group should ok', function (done) {
+    this.timeout(8000);
+    conn.activateReplicaGroup('source', function (err, _) {
+      expect(err).not.to.be.ok();
+      done();
     });
   });
 
@@ -116,7 +121,7 @@ describe('Collection split', function () {
   });
 
   it('activate dest group should ok', function (done) {
-    this.timeout(15000);
+    this.timeout(20000);
     conn.activateReplicaGroup('dest', function (err, _) {
       expect(err).not.to.be.ok();
       done();
@@ -165,13 +170,6 @@ describe('Collection split', function () {
     });
   });
 
-  it('wait for 10s', function(done) {
-    this.timeout(11000);
-    setTimeout(function () {
-      done();
-    }, 10000);
-  });
-
   it('splitByPercentAsync should ok', function (done) {
     this.timeout(8000);
     _collection.splitByPercentAsync('source', 'dest', 50, function (err, cursor) {
@@ -180,31 +178,24 @@ describe('Collection split', function () {
     });
   });
 
-  it('wait for 10s', function(done) {
-    this.timeout(11000);
-    setTimeout(function () {
-      done();
-    }, 10000);
-  });
-
-  it('drop collection space should ok', function(done){
-    conn.dropCollectionSpace(spaceName, function(err){
+  it('drop collection space should ok', function (done) {
+    conn.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  it('remove source group should ok', function(done){
+  it('remove source group should ok', function (done) {
     this.timeout(10000);
-    conn.removeReplicaGroup('source', function(err, _){
+    conn.removeReplicaGroup('source', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
-  it('remove dest group should ok', function(done){
+  it('remove dest group should ok', function (done) {
     this.timeout(10000);
-    conn.removeReplicaGroup('dest', function(err, _){
+    conn.removeReplicaGroup('dest', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
