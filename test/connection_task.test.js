@@ -165,6 +165,17 @@ describe('Connection Task', function () {
     });
   });
 
+  it('get another task id should ok', function (done) {
+    this.timeout(8000);
+    var splitCondition = {age: 50};
+    var splitEndCondition = {age: 70};
+    _collection.splitAsync(source, dest, splitCondition, splitEndCondition, function (err, id) {
+      expect(err).not.to.be.ok();
+      taskID = id;
+      done();
+    });
+  });
+
   it('cancelTask should ok', function (done) {
     this.timeout(10000);
     conn.cancelTask(taskID, true, function (err) {
