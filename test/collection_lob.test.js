@@ -92,6 +92,16 @@ describe('Collection Lob', function () {
     });
   });
 
+  it('Lob.write(bigbuff) should ok', function (done) {
+    this.timeout(25000);
+    var bigsize = 1024 * 1024 + 1;
+    lob.write(new Buffer(bigsize), function (err) {
+      expect(err).not.to.be.ok();
+      expect(Long.fromNumber(bigsize + 16).equals(lob.size)).to.be.ok();
+      done();
+    });
+  });
+
   it('Lob.close should ok', function (done) {
     lob.close(function (err) {
       expect(err).not.to.be.ok();
@@ -115,6 +125,9 @@ describe('Collection Lob', function () {
   it('Lob.open should ok', function (done) {
     currentLob = collection.openLob(lob.id, function (err) {
       expect(err).not.to.be.ok();
+      expect(currentLob.getID()).to.be(currentLob.id);
+      expect(currentLob.getSize()).to.be(currentLob.size);
+      expect(currentLob.getCreateTime()).to.be(currentLob.createTime);
       done();
     });
   });
@@ -122,6 +135,7 @@ describe('Collection Lob', function () {
   it('Lob.read should ok', function (done) {
     currentLob.read(16, function (err, buff) {
       expect(err).not.to.be.ok();
+      expect(Long.fromNumber(16).equals(currentLob.readOffset)).to.be.ok();
       expect(buff).to.eql(new Buffer("0123456789abcdef"));
       done();
     });
@@ -136,7 +150,8 @@ describe('Collection Lob', function () {
     expect(Long.fromNumber(2).equals(currentLob.readOffset)).to.be.ok();
     currentLob.seek(1, Lob.SDB_LOB_SEEK_END);
     expect(Long.isLong(currentLob.readOffset)).to.be.ok();
-    expect(Long.fromNumber(15).equals(currentLob.readOffset)).to.be.ok();
+    var totalSize = Long.fromNumber(1024 * 1024 + 17 - 1);
+    expect(totalSize.equals(currentLob.readOffset)).to.be.ok();
   });
 
   it('Lob.close should ok', function (done) {

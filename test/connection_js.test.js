@@ -21,7 +21,7 @@ var common = require('./common');
 var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
-describe('Collection js', function () {
+describe('Connection js', function () {
   var conn = common.createConnection();
   var collection;
 
@@ -64,11 +64,10 @@ describe('Collection js', function () {
 
   it("execUpdate should ok", function (done) {
     // insert English
-    var insert = "INSERT INTO " + spaceName + "." + collectionName +
+    var sql = "INSERT INTO " + spaceName + "." + collectionName +
                 " ( c, d, e, f ) values( 6.1, \"8.1\", \"aaa\", \"bbb\")";
-    conn.execUpdate(insert, function (err, result) {
+    conn.execUpdate(sql, function (err) {
       expect(err).not.to.be.ok();
-      console.log(result);
       done();
     });
   });
@@ -80,6 +79,56 @@ describe('Collection js', function () {
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
         expect(item).to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it('createProcedure should ok', function (done) {
+    var code = function sum(x,y){return x+y;};
+    conn.createProcedure(code, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it("evalJS should ok", function (done) {
+    conn.evalJS("sum(1,2)", function (err, result) {
+      expect(err).not.to.be.ok();
+      expect(result).to.be.ok();
+      var cursor = result.cursor;
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it("getProcedures should ok", function (done) {
+    conn.getProcedures({"name":"sum"}, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it('removeProcedure should ok', function (done) {
+    conn.removeProcedure('sum', function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it("getProcedures should ok", function (done) {
+    conn.getProcedures({"name":"sum"}, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be(null);
         done();
       });
     });

@@ -133,7 +133,7 @@ describe('/lib/buffer.js', function () {
     lbuff.writeLong(new Long(0x1, 0x0), 0);
     expect(lbuff.buff).to.eql(new Buffer([1, 0, 0, 0, 0, 0, 0, 0]));
     expect(function () {
-      lbuff.writeLong(new Long(0x1, 0x0));
+      lbuff.writeLong('hehe');
     }).to.throwError(/Must pass the offset/);
   });
 
