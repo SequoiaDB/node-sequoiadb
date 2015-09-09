@@ -66,7 +66,6 @@ describe('Connection js', function () {
     // insert English
     var sql = "INSERT INTO " + spaceName + "." + collectionName +
                 " ( c, d, e, f ) values( 6.1, \"8.1\", \"aaa\", \"bbb\")";
-
     conn.execUpdate(sql, function (err) {
       expect(err).not.to.be.ok();
       done();
@@ -85,12 +84,51 @@ describe('Connection js', function () {
     });
   });
 
+  it('createProcedure should ok', function (done) {
+    var code = function sum(x,y){return x+y;};
+    conn.createProcedure(code, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it("evalJS should ok", function (done) {
+    conn.evalJS("sum(1,2)", function (err, result) {
+      expect(err).not.to.be.ok();
+      expect(result).to.be.ok();
+      var cursor = result.cursor;
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be.ok();
+        done();
+      });
+    });
+  });
+
   it("getProcedures should ok", function (done) {
     conn.getProcedures({"name":"sum"}, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
-        // expect(item).to.be.ok();
+        expect(item).to.be.ok();
+        done();
+      });
+    });
+  });
+
+  it('removeProcedure should ok', function (done) {
+    conn.removeProcedure('sum', function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
+  it("getProcedures should ok", function (done) {
+    conn.getProcedures({"name":"sum"}, function (err, cursor) {
+      expect(err).not.to.be.ok();
+      cursor.current(function (err, item) {
+        expect(err).not.to.be.ok();
+        expect(item).to.be(null);
         done();
       });
     });
