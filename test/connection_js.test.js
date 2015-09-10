@@ -62,6 +62,14 @@ describe('Connection js', function () {
     });
   });
 
+  it("set read from master first", function(done){
+    var option = {"PreferedInstance":"M"};
+    conn.setSessionAttr(option, function (err) {
+      expect(err).not.to.be.ok();
+      done();
+    });
+  });
+
   it("execUpdate should ok", function (done) {
     // insert English
     var sql = "INSERT INTO " + spaceName + "." + collectionName +
