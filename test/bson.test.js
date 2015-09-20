@@ -18,7 +18,8 @@
 
 var expect = require('expect.js');
 var bson = require("bson");
-var serialize = require('../lib/bson');
+var serialize = require('../lib/bson').serialize;
+var deserialize = require('../lib/bson').deserialize;
 
 describe('/lib/bson.js', function () {
   it('convert String should ok', function () {
@@ -50,6 +51,8 @@ describe('/lib/bson.js', function () {
       0x00, // ("" + "\x00")
       0x00 // "\x00"
     ]));
+
+    expect(deserialize(buff, true)).to.eql(auth);
   });
 
   it('convert Boolean should ok', function () {
@@ -71,6 +74,7 @@ describe('/lib/bson.js', function () {
       0x01, // true
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Number should ok', function () {
@@ -92,6 +96,7 @@ describe('/lib/bson.js', function () {
       0x00, 0x00, 0x00, 0x01, // (1)
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Double should ok', function () {
@@ -113,6 +118,7 @@ describe('/lib/bson.js', function () {
       0x3f, 0xf1, 0x99, 0x99, 0x99, 0x99, 0x99, 0x9a, // (1.1)
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Long should ok', function () {
@@ -135,6 +141,7 @@ describe('/lib/bson.js', function () {
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x64, // (100)
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql({"ok": 100});
   });
 
   it('convert Regex should ok', function () {
@@ -158,6 +165,7 @@ describe('/lib/bson.js', function () {
       0x69, 0x00, // "i"
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Date should ok', function () {
@@ -180,6 +188,7 @@ describe('/lib/bson.js', function () {
       0x00, 0x00, 0x01, 0x49, 0x1e, 0xd6, 0x48, 0x00, // date
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Timestamp should ok', function () {
@@ -202,6 +211,7 @@ describe('/lib/bson.js', function () {
       0x00, 0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0x00, // timestamp
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Binary should ok', function () {
@@ -228,6 +238,8 @@ describe('/lib/bson.js', function () {
       0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, // buffer
       0x00 // "\x00"
     ]));
+    var result = deserialize(buff, true);
+    expect(result.ok.buffer).to.eql(day);
   });
 
   it('convert Null should ok', function () {
@@ -247,6 +259,7 @@ describe('/lib/bson.js', function () {
       0x6f, 0x6b, 0x00, // ok
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Undefined should ok', function () {
@@ -266,6 +279,49 @@ describe('/lib/bson.js', function () {
       0x6f, 0x6b, 0x00, // ok
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql({"ok": null});
+  });
+
+  it('convert MaxKey should ok', function () {
+    var doc = {"ok": new bson.MaxKey()};
+    var buff = serialize(doc, false);
+    expect(buff).to.eql(new Buffer([
+      0x09, 0x00, 0x00, 0x00, // length
+      0x7f, // e_name maxkey
+      0x6f, 0x6b, 0x00, // ok
+      0x00 // "\x00"
+    ]));
+
+    var buff = serialize(doc, true);
+    expect(buff).to.eql(new Buffer([
+      0x00, 0x00, 0x00, 0x09, // length
+      0x7f, // e_name maxkey
+      0x6f, 0x6b, 0x00, // ok
+      0x00 // "\x00"
+    ]));
+    var result = deserialize(buff, true);
+    expect(result.ok._bsontype).to.be("MaxKey");
+  });
+
+  it('convert MinKey should ok', function () {
+    var doc = {"ok": new bson.MinKey()};
+    var buff = serialize(doc, false);
+    expect(buff).to.eql(new Buffer([
+      0x09, 0x00, 0x00, 0x00, // length
+      0xff, // e_name minkey
+      0x6f, 0x6b, 0x00, // ok
+      0x00 // "\x00"
+    ]));
+
+    var buff = serialize(doc, true);
+    expect(buff).to.eql(new Buffer([
+      0x00, 0x00, 0x00, 0x09, // length
+      0xff, // e_name minkey
+      0x6f, 0x6b, 0x00, // ok
+      0x00 // "\x00"
+    ]));
+    var result = deserialize(buff, true);
+    expect(result.ok._bsontype).to.be("MinKey");
   });
 
   it('convert ObjectID should ok', function () {
@@ -290,6 +346,7 @@ describe('/lib/bson.js', function () {
       0x01, 0x23, 0x45, 0x67, // buffer
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Array should ok', function () {
@@ -329,6 +386,7 @@ describe('/lib/bson.js', function () {
         0x00, // 0x00
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Object should ok', function () {
@@ -360,6 +418,7 @@ describe('/lib/bson.js', function () {
         0x00, // 0x00
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   it('convert Object(in Object) should ok', function () {
@@ -389,6 +448,7 @@ describe('/lib/bson.js', function () {
         0x00, // 0x00
       0x00 // "\x00"
     ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 
   xit('convert Ref should ok', function () {
@@ -399,14 +459,9 @@ describe('/lib/bson.js', function () {
     var buff = serialize(doc, false);
     expect(buff).to.eql(new Buffer([
       0x33, 0x00, 0x00, 0x00, // length
-      0x03, // e_name Ref
+      0x0c, // e_name Ref
       0x6f, 0x6b, 0x00, // ok
-      0x2a, 0x00, 0x00, 0x00, // length
-      0x02, // string
-      0x61, 0x01, 0x02, 0x03, 0x04, 0x06, 0x61, 0x01, 0x02, 0x00, // "a"
-      0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, // buffer
-      0x01, 0x23, 0x45, 0x67, // buffer
-      0x00, // 0x00
+      0x6e, 0x61, 0x6d, 0x65, 0x73, 0x70, 0x61, 0x63, 0x65, 0x00, // namespace
       0x00 // "\x00"
     ]));
 
@@ -423,5 +478,68 @@ describe('/lib/bson.js', function () {
         0x00, // 0x00
       0x00 // "\x00"
     ]));
+  });
+
+  it('convert with padding should ok', function () {
+    var doc = { '$set': { age: 25 } };
+    var buff = new Buffer([
+      0x00, 0x00, 0x00, 0x19, // length
+      0x03, // e_name Document
+      0x24, 0x73, 0x65, 0x74, 0x00, // $set
+        0x00, 0x00, 0x00, 0x0e, // length
+        0x10, // int32
+        0x61, 0x67, 0x65, 0x00, // age
+        0x00, 0x00, 0x00, 0x19, // 25
+        0x00, // 0x00
+      0x00, 0x00, 0x00 // "\x00"
+    ]);
+    expect(deserialize(buff, true)).to.eql(doc);
+  });
+
+  it('convert Code should ok', function () {
+    var code = function sum(x,y){return x+y;};
+    var doc = {"ok": new bson.Code(code, {a: 'a'})};
+    var buff = serialize(doc, false);
+    expect(buff).to.eql(new Buffer([
+      0x3e, 0x00, 0x00, 0x00, // length
+      0x0f, // e_name code_w_s
+      0x6f, 0x6b, 0x00, // ok
+      0x35, 0x00, 0x00, 0x00, // length
+        0x1f, 0x00, 0x00, 0x00, // // code = string(int32 + value)
+        0x66, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+        0x20, 0x73, 0x75, 0x6d, 0x28, 0x78, 0x2c, 0x79,
+        0x29, 0x7b, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e,
+        0x20, 0x78, 0x2b, 0x79, 0x3b, 0x7d, 0x00,
+          // scope
+          0x0e, 0x00, 0x00, 0x00, // length
+            0x02, // e_name
+            0x61, 0x00, // a
+            0x02, 0x00, 0x00, 0x00,
+            0x61, 0x00,
+          0x00,
+      0x00 // "\x00"
+    ]));
+
+    var buff = serialize(doc, true);
+    expect(buff).to.eql(new Buffer([
+      0x00, 0x00, 0x00, 0x3e, // length
+      0x0f, // e_name code_w_s
+      0x6f, 0x6b, 0x00, // ok
+      0x00, 0x00, 0x00, 0x35, // length
+        0x00, 0x00, 0x00, 0x1f, // // code = string(int32 + value)
+        0x66, 0x75, 0x6e, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+        0x20, 0x73, 0x75, 0x6d, 0x28, 0x78, 0x2c, 0x79,
+        0x29, 0x7b, 0x72, 0x65, 0x74, 0x75, 0x72, 0x6e,
+        0x20, 0x78, 0x2b, 0x79, 0x3b, 0x7d, 0x00,
+          // scope
+          0x00, 0x00, 0x00, 0x0e, // length
+            0x02, // e_name
+            0x61, 0x00, // a
+            0x00, 0x00, 0x00, 0x02,
+            0x61, 0x00,
+          0x00,
+      0x00 // "\x00"
+    ]));
+    expect(deserialize(buff, true)).to.eql(doc);
   });
 });
