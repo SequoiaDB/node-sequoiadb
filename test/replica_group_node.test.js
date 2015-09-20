@@ -63,22 +63,22 @@ describe('Replica Group Node', function () {
   });
 
   it('createNode should ok', function (done) {
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 11880;
     var dbpath = '/opt/sequoiadb/database/data/11880';
     group.createNode(host, port, dbpath, {}, function (err, _node) {
       expect(err).not.to.be.ok();
       node = _node;
-      expect(_node.nodename).to.be('123.56.143.17:11880');
+      expect(_node.nodename).to.be(common.ip + ':11880');
       done();
     });
   });
 
   it('getNodeByName should ok', function (done) {
-    var name = '123.56.143.17:11880';
+    var name = common.ip + ':11880';
     group.getNodeByName(name, function (err, node) {
       expect(err).not.to.be.ok();
-      expect(node.nodename).to.be('123.56.143.17:11880');
+      expect(node.nodename).to.be(common.ip + ':11880');
       done();
     });
   });
@@ -118,7 +118,7 @@ describe('Replica Group Node', function () {
     });
   });
   it('removeNode should ok', function (done) {
-    var host = '123.56.143.17';
+    var host = common.ip;
     group.removeNode(host, 11880, {}, function (err) {
       expect(err).to.be.ok();
       done();
@@ -155,7 +155,7 @@ describe('Replica Group Node', function () {
     group.getMaster(function (err, node) {
       expect(err).not.to.be.ok();
       expect(node).to.be.ok();
-      expect(node.nodename).to.be('123.56.143.17:11880');
+      expect(node.nodename).to.be(common.ip + ':11880');
       expect(node.group.name).to.be('for_node');
       done();
     });
@@ -165,7 +165,7 @@ describe('Replica Group Node', function () {
     group.getSlave(function (err, node) {
       expect(err).not.to.be.ok();
       expect(node).to.be.ok();
-      expect(node.nodename).to.be('123.56.143.17:11880');
+      expect(node.nodename).to.be(common.ip + ':11880');
       expect(node.group.name).to.be('for_node');
       done();
     });

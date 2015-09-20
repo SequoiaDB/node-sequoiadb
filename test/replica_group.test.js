@@ -79,7 +79,7 @@ describe('Replica Group', function () {
 
   it('createReplicaCataGroup should ok', function (done) {
     this.timeout(8000);
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 11810;
     var dbpath = '/opt/sequoiadb/database/data/11890';
     conn.createReplicaCataGroup(host, port, dbpath, null, function (err) {

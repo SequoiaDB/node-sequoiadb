@@ -53,8 +53,8 @@ describe('Collection split', function () {
     });
   });
 
-  it('create source group should ok', function(done){
-    conn.createReplicaGroup("source", function(err, group){
+  it('create source group should ok', function (done) {
+    conn.createReplicaGroup("source", function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       srcGroup = group;
@@ -64,7 +64,7 @@ describe('Collection split', function () {
 
   it('source group create node should ok', function (done) {
     this.timeout(8000);
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 22000;
     var dbpath = '/opt/sequoiadb/database/data/22000';
     srcGroup.createNode(host, port, dbpath, {}, function (err, _) {
@@ -103,7 +103,7 @@ describe('Collection split', function () {
 
   it('create node for dest group should ok', function (done) {
     this.timeout(8000);
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 22010;
     var dbpath = '/opt/sequoiadb/database/data/22010';
     dstGroup.createNode(host, port, dbpath, {}, function(err, _){

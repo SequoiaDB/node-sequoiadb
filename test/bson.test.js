@@ -362,6 +362,35 @@ describe('/lib/bson.js', function () {
     ]));
   });
 
+  it('convert Object(in Object) should ok', function () {
+    var doc = { '$set': { age: 25 } };
+    var buff = serialize(doc, false);
+    expect(buff).to.eql(new Buffer([
+      0x19, 0x00, 0x00, 0x00, // length
+      0x03, // e_name Document
+      0x24, 0x73, 0x65, 0x74, 0x00, // $set
+        0x0e, 0x00, 0x00, 0x00, // length
+        0x10, // int32
+        0x61, 0x67, 0x65, 0x00, // age
+        0x19, 0x00, 0x00, 0x00, // 25
+        0x00, // 0x00
+      0x00 // "\x00"
+    ]));
+
+    var buff = serialize(doc, true);
+    expect(buff).to.eql(new Buffer([
+      0x00, 0x00, 0x00, 0x19, // length
+      0x03, // e_name Document
+      0x24, 0x73, 0x65, 0x74, 0x00, // $set
+        0x00, 0x00, 0x00, 0x0e, // length
+        0x10, // int32
+        0x61, 0x67, 0x65, 0x00, // age
+        0x00, 0x00, 0x00, 0x19, // 25
+        0x00, // 0x00
+      0x00 // "\x00"
+    ]));
+  });
+
   xit('convert Ref should ok', function () {
     var DBRef = bson.BSONPure.DBRef;
     var ObjectID = bson.BSONPure.ObjectID;
