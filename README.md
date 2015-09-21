@@ -236,7 +236,5 @@ collection.dropIndex('index_name', function (err) {
 });
 ```
 
-###
-
 ## License
 [The Apache License 2.0](https://github.com/SequoiaDB/node-sequoiadb/blob/master/LICENSE)

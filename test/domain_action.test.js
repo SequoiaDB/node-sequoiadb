@@ -59,11 +59,11 @@ describe('Domain Actions', function () {
   describe('CollectionSpace with domain', function () {
     var _space;
     it('alter to data group should ok', function (done) {
-        var options = {
-          "Groups": [ "data" ],
-          "AutoSplit": true
-        };
-        domain.alter(options, function (err) {
+      var options = {
+        "Groups": [ "data" ],
+        "AutoSplit": true
+      };
+      domain.alter(options, function (err) {
         expect(err).not.to.be.ok();
         done();
       });

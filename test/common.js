@@ -17,12 +17,14 @@
 'use strict';
 
 var Connection = require('../lib/connection');
+// var ip = "123.56.143.17"; // intel
+var ip = "172.16.14.149"; // ppc
 
 exports.createConnection = function () {
-  return new Connection(11810, "172.16.14.149", {
+  return new Connection(11810, ip, {
     user: "",
     pass: ""
   });
 };
 
-exports.ip = "172.16.14.149";
+exports.ip = ip;
