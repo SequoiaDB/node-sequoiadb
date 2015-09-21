@@ -19,8 +19,10 @@
 var Connection = require('../lib/connection');
 
 exports.createConnection = function () {
-  return new Connection(11810, "123.56.143.17", {
+  return new Connection(11810, "172.16.14.149", {
     user: "",
     pass: ""
   });
 };
+
+exports.ip = "172.16.14.149";

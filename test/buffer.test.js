@@ -135,6 +135,9 @@ describe('/lib/buffer.js', function () {
     expect(function () {
       lbuff.writeLong('hehe');
     }).to.throwError(/Must pass the offset/);
+    expect(function () {
+      lbuff.writeLong({}, 0);
+    }).to.throwError(/Must pass the Long type as value/);
   });
 
   it('readLong should ok', function () {

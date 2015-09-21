@@ -18,8 +18,8 @@
 
 var expect = require('expect.js');
 var common = require('./common');
-var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
+var Collection = require('../lib/collection');
 var Query = require('../lib/query');
 var Long = require('long');
 
@@ -61,8 +61,7 @@ describe('Collection DML', function () {
   after(function (done) {
     conn.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect();
-      done();
+      conn.disconnect(done);
     });
   });
 
