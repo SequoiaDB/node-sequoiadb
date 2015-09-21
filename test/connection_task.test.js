@@ -79,7 +79,7 @@ describe('Connection Task', function () {
 
   it('source group create node should ok', function (done) {
     this.timeout(8000);
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 22000;
     var dbpath = '/opt/sequoiadb/database/data/22000';
     srcGroup.createNode(host, port, dbpath, {}, function (err, _){
@@ -119,7 +119,7 @@ describe('Connection Task', function () {
 
   it('create node for dest group should ok', function (done) {
     this.timeout(8000);
-    var host = '123.56.143.17';
+    var host = common.ip;
     var port = 22010;
     var dbpath = '/opt/sequoiadb/database/data/22010';
     dstGroup.createNode(host, port, dbpath, {}, function (err, _){
