@@ -81,7 +81,7 @@ describe('Replica Group', function () {
     this.timeout(8000);
     var host = common.ip;
     var port = 11810;
-    var dbpath = '/opt/sequoiadb/database/data/11890';
+    var dbpath = common.dbpath + 'data/11890';
     conn.createReplicaCataGroup(host, port, dbpath, null, function (err) {
       expect(err).to.be.ok();
       expect(err.message).to.be("Unable to create new catalog when there's already one exists");
