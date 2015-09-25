@@ -65,7 +65,7 @@ describe('Replica Group Node', function () {
   it('createNode should ok', function (done) {
     var host = common.ip;
     var port = 11880;
-    var dbpath = '/opt/sequoiadb/database/data/11880';
+    var dbpath = common.dbpath + 'data/11880';
     group.createNode(host, port, dbpath, {}, function (err, _node) {
       expect(err).not.to.be.ok();
       node = _node;
@@ -92,7 +92,7 @@ describe('Replica Group Node', function () {
   });
 
   it('node.start should ok', function (done) {
-    this.timeout(8000);
+    this.timeout(20000);
     node.start(function (err, status) {
       expect(err).not.to.be.ok();
       expect(status).to.be(true);
@@ -134,7 +134,7 @@ describe('Replica Group Node', function () {
   });
 
   it('start Group should ok', function (done) {
-    this.timeout(8000);
+    this.timeout(20000);
     group.start(function (err, ok) {
       expect(err).not.to.be.ok();
       expect(ok).to.be(true);
@@ -143,7 +143,7 @@ describe('Replica Group Node', function () {
   });
 
   it('stop Group should ok', function (done) {
-    this.timeout(8000);
+    this.timeout(20000);
     group.stop(function (err, ok) {
       expect(err).not.to.be.ok();
       expect(ok).to.be(true);

@@ -17,8 +17,12 @@
 'use strict';
 
 var Connection = require('../lib/connection');
-// var ip = "123.56.143.17"; // intel
-var ip = "172.16.14.149"; // ppc
+// x86
+var ip = "192.168.20.63";
+var dbpath = "/home/users/lz/database/"
+// power pc
+//var ip = "192.168.30.162";
+//var dbpath = "/opt/sequoiadb/database/"
 
 exports.createConnection = function () {
   return new Connection(11810, ip, {
@@ -28,3 +32,4 @@ exports.createConnection = function () {
 };
 
 exports.ip = ip;
+exports.dbpath = dbpath;
