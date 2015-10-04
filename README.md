@@ -14,7 +14,7 @@ $ npm install sequoiadb --save
 Create a connection to sequoiadb server:
 
 ```js
-var Connection = require('sequoiadb');
+var Connection = require('sequoiadb').Connection;
 var conn = new Connection(11810, "ip", {
   user: "",
   pass: ""
@@ -190,6 +190,34 @@ collection.query(function (err, cursor) {
 });
 ```
 
+Delete document:
+
+```js
+collection.delete({name: "sequoiadb"}, 0, function (err) {
+  // TODO
+});
+```
+
+Delete all documents:
+
+```js
+collection.delete(function (err) {
+  // TODO
+});
+```
+
+Aggregate:
+
+```js
+var insertors = [
+  {$match:{status:"A"}},
+  {$group:{ _id: "$cust_id", total: {$sum: "$amount"}}}
+];
+collection.aggregate(insertors, function (err) {
+  // TODO
+});
+```
+
 ### Index
 
 Create Index for collection:
@@ -232,6 +260,63 @@ Drop index:
 
 ```js
 collection.dropIndex('index_name', function (err) {
+  // TODO
+});
+```
+### Lob
+Get Lobs:
+
+```js
+collection.getLobs(function (err, cursor) {
+  // TODO
+});
+```
+
+Create Lob:
+
+```js
+var lob = collection.createLob(function (err) {
+  // TODO
+});
+```
+
+Open Lob:
+
+```js
+var lob = collection.openLob(oid, function (err) {
+  // TODO
+});
+```
+
+Write data into lob:
+
+```js
+lob.write(buff, function (err) {
+  // TODO
+});
+```
+
+Read data from lob:
+
+```js
+lob.read(16, function (err, buff) {
+  // TODO
+});
+```
+
+Seek the position:
+
+```js
+var Lob = require('sequoiadb').Lob;
+lob.seek(pos, Lob.SDB_LOB_SEEK_SET); // 0 + pos
+lob.seek(pos, Lob.SDB_LOB_SEEK_CUR); // current + pos
+lob.seek(pos, Lob.SDB_LOB_SEEK_END); // total - pos
+```
+
+Close lob:
+
+```js
+lob.close(function (err) {
   // TODO
 });
 ```
