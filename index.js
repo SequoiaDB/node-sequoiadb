@@ -14,4 +14,7 @@
  *   limitations under the License.
  */
 
-module.exports = require("./lib/connection");
+exports.Connection = require("./lib/connection");
+exports.Lob = require("./lib/lob");
+exports.SDB = require("./lib/const");
+exports.Long = require("long");
