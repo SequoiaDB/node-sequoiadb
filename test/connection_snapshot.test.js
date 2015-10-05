@@ -21,19 +21,19 @@ var common = require('./common');
 var constants = require('../lib/const');
 
 describe('Collection Snapshot', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it("getSnapshot(SDB_SNAP_CONTEXTS) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_CONTEXTS, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_CONTEXTS, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -44,7 +44,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_CONTEXTS_CURRENT) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_CONTEXTS_CURRENT, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_CONTEXTS_CURRENT, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -55,7 +55,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_SESSIONS) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_SESSIONS, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_SESSIONS, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -66,7 +66,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_SESSIONS_CURRENT) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_SESSIONS_CURRENT, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_SESSIONS_CURRENT, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -77,7 +77,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_COLLECTIONS) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_COLLECTIONS, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_COLLECTIONS, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -88,7 +88,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_COLLECTIONSPACES) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_COLLECTIONSPACES, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_COLLECTIONSPACES, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -99,7 +99,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_DATABASE) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_DATABASE, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_DATABASE, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -110,7 +110,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("getSnapshot(SDB_SNAP_SYSTEM) should ok", function (done) {
-    conn.getSnapshot(constants.SDB_SNAP_SYSTEM, null, null, null, function (err, cursor) {
+    client.getSnapshot(constants.SDB_SNAP_SYSTEM, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -121,7 +121,7 @@ describe('Collection Snapshot', function () {
   });
 
   it("resetSnapshot should ok", function (done) {
-    conn.resetSnapshot(function (err) {
+    client.resetSnapshot(function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -129,10 +129,9 @@ describe('Collection Snapshot', function () {
 
   it('flushConfigure should ok', function (done) {
     var matcher = {"Global":false};
-    conn.flushConfigure(matcher, function (err) {
+    client.flushConfigure(matcher, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
-
 });

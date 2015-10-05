@@ -20,19 +20,19 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Domain', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('getDomains should ok', function (done) {
-    conn.getDomains(null, null, null, null, function (err, cursor) {
+    client.getDomains(null, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.ok();
       done();
@@ -40,7 +40,7 @@ describe('Domain', function () {
   });
 
   it('isDomainExist should ok', function (done) {
-    conn.isDomainExist('inexist', function (err, exist) {
+    client.isDomainExist('inexist', function (err, exist) {
       expect(err).not.to.be.ok();
       expect(exist).to.be(false);
       done();
@@ -48,7 +48,7 @@ describe('Domain', function () {
   });
 
   it('getDomain should ok', function (done) {
-    conn.getDomain('inexist', function (err, domain) {
+    client.getDomain('inexist', function (err, domain) {
       expect(err).not.to.be.ok();
       expect(domain).to.be(null);
       done();
@@ -56,7 +56,7 @@ describe('Domain', function () {
   });
 
   it('createDomain should ok', function (done) {
-    conn.createDomain('mydomain', function (err, domain) {
+    client.createDomain('mydomain', function (err, domain) {
       expect(err).not.to.be.ok();
       expect(domain).to.be.ok();
       expect(domain.name).to.be('mydomain');
@@ -65,7 +65,7 @@ describe('Domain', function () {
   });
 
   it('getDomain should ok with exist', function (done) {
-    conn.getDomain('mydomain', function (err, domain) {
+    client.getDomain('mydomain', function (err, domain) {
       expect(err).not.to.be.ok();
       expect(domain.name).to.be('mydomain');
       done();
@@ -73,7 +73,7 @@ describe('Domain', function () {
   });
 
   it('dropDomain should ok', function (done) {
-    conn.dropDomain('mydomain', function (err, domain) {
+    client.dropDomain('mydomain', function (err, domain) {
       expect(err).not.to.be.ok();
       done();
     });

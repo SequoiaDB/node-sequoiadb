@@ -24,7 +24,7 @@ var Query = require('../lib/query');
 var Long = require('long');
 
 describe('Collection DML', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var collection;
   var _space;
 
@@ -33,7 +33,7 @@ describe('Collection DML', function () {
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
+    client.ready(function () {
       var createCollection = function (space) {
         _space = space;
         space.createCollection(collectionName, function (err, _collection) {
@@ -43,9 +43,9 @@ describe('Collection DML', function () {
           done();
         });
       };
-      conn.createCollectionSpace(spaceName, function (err, space) {
+      client.createCollectionSpace(spaceName, function (err, space) {
         if (err) {
-          conn.getCollectionSpace(spaceName, function (err, _space) {
+          client.getCollectionSpace(spaceName, function (err, _space) {
             expect(err).not.to.be.ok();
             createCollection(_space);
           });
@@ -59,9 +59,9 @@ describe('Collection DML', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect(done);
+      client.disconnect(done);
     });
   });
 

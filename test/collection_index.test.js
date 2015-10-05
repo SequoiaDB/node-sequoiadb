@@ -22,7 +22,7 @@ var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
 describe('Collection index', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var collection;
 
   var spaceName = 'foo6';
@@ -30,7 +30,7 @@ describe('Collection index', function () {
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
+    client.ready(function () {
       var createCollection = function (space) {
         space.createCollection(collectionName, function (err, _collection) {
           expect(err).not.to.be.ok();
@@ -39,9 +39,9 @@ describe('Collection index', function () {
           done();
         });
       };
-      conn.createCollectionSpace(spaceName, function (err, space) {
+      client.createCollectionSpace(spaceName, function (err, space) {
         if (err) {
-          conn.getCollectionSpace(spaceName, function (err, _space) {
+          client.getCollectionSpace(spaceName, function (err, _space) {
             expect(err).not.to.be.ok();
             createCollection(_space);
           });
@@ -55,16 +55,15 @@ describe('Collection index', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect();
-      done();
+      client.disconnect(done);
     });
   });
 
   it("set read from master first", function(done){
     var option = {"PreferedInstance":"M"};
-    conn.setSessionAttr(option, function (err) {
+    client.setSessionAttr(option, function (err) {
       expect(err).not.to.be.ok();
       done();
     });

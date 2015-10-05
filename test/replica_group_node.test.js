@@ -21,15 +21,15 @@ var common = require('./common');
 var constants = require('../lib/const');
 
 describe('Replica Group Node', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   var groupname = 'for_node';
   var group;
   var node;
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      conn.createReplicaGroup(groupname, function (err, _group) {
+    client.ready(function () {
+      client.createReplicaGroup(groupname, function (err, _group) {
         expect(err).not.to.be.ok();
         group = _group;
         done();
@@ -39,9 +39,9 @@ describe('Replica Group Node', function () {
 
   after(function (done) {
     this.timeout(8000);
-    conn.removeReplicaGroup(groupname, function (err) {
+    client.removeReplicaGroup(groupname, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect(done);
+      client.disconnect(done);
     });
   });
 

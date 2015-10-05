@@ -20,22 +20,22 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Connection Backup', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('getBackups should ok', function (done) {
     var options = {
       // "Path": "/opt/sequoiadb/backup"
     };
-    conn.getBackups(options, null, null, null, function (err, cursor) {
+    client.getBackups(options, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();
@@ -54,7 +54,7 @@ describe('Connection Backup', function () {
       // "EnsureInc": true,
       // "OverWrite": true
     };
-    conn.backupOffline(options, function (err) {
+    client.backupOffline(options, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -63,7 +63,7 @@ describe('Connection Backup', function () {
   var _item;
   it('getBackups should ok with items', function (done) {
     var options = {};
-    conn.getBackups(options, null, null, null, function (err, cursor) {
+    client.getBackups(options, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();
@@ -76,7 +76,7 @@ describe('Connection Backup', function () {
 
   it('removeBackup should ok with items', function (done) {
     var options = {};
-    conn.removeBackup(options, function (err, cursor) {
+    client.removeBackup(options, function (err, cursor) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -86,7 +86,7 @@ describe('Connection Backup', function () {
     var options = {
       // "Path": "/opt/sequoiadb/backup"
     };
-    conn.getBackups(options, null, null, null, function (err, cursor) {
+    client.getBackups(options, null, null, null, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();

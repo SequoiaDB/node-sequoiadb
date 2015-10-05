@@ -22,7 +22,7 @@ var Collection = require('../lib/collection');
 var CollectionSpace = require('../lib/collection_space');
 
 describe('Connection js', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var collection;
 
   var spaceName = 'foo6';
@@ -30,7 +30,7 @@ describe('Connection js', function () {
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
+    client.ready(function () {
       var createCollection = function (space) {
         space.createCollection(collectionName, function (err, _collection) {
           expect(err).not.to.be.ok();
@@ -39,9 +39,9 @@ describe('Connection js', function () {
           done();
         });
       };
-      conn.createCollectionSpace(spaceName, function (err, space) {
+      client.createCollectionSpace(spaceName, function (err, space) {
         if (err) {
-          conn.getCollectionSpace(spaceName, function (err, _space) {
+          client.getCollectionSpace(spaceName, function (err, _space) {
             expect(err).not.to.be.ok();
             createCollection(_space);
           });
@@ -55,16 +55,15 @@ describe('Connection js', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect();
-      done();
+      client.disconnect(done);
     });
   });
 
   it("set read from master first", function(done){
     var option = {"PreferedInstance":"M"};
-    conn.setSessionAttr(option, function (err) {
+    client.setSessionAttr(option, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -74,7 +73,7 @@ describe('Connection js', function () {
     // insert English
     var sql = "INSERT INTO " + spaceName + "." + collectionName +
                 " ( c, d, e, f ) values( 6.1, \"8.1\", \"aaa\", \"bbb\")";
-    conn.execUpdate(sql, function (err) {
+    client.execUpdate(sql, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -82,7 +81,7 @@ describe('Connection js', function () {
 
   it("exec should ok", function (done) {
     var sql = "SELECT * FROM " + spaceName + "." + collectionName;
-    conn.exec(sql, function (err, cursor) {
+    client.exec(sql, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -94,14 +93,14 @@ describe('Connection js', function () {
 
   it('createProcedure should ok', function (done) {
     var code = function sum(x,y){return x+y;};
-    conn.createProcedure(code, function (err) {
+    client.createProcedure(code, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   it("evalJS should ok", function (done) {
-    conn.evalJS("sum(1,2)", function (err, result) {
+    client.evalJS("sum(1,2)", function (err, result) {
       expect(err).not.to.be.ok();
       expect(result).to.be.ok();
       var cursor = result.cursor;
@@ -114,7 +113,7 @@ describe('Connection js', function () {
   });
 
   it("getProcedures should ok", function (done) {
-    conn.getProcedures({"name":"sum"}, function (err, cursor) {
+    client.getProcedures({"name":"sum"}, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();
@@ -125,14 +124,14 @@ describe('Connection js', function () {
   });
 
   it('removeProcedure should ok', function (done) {
-    conn.removeProcedure('sum', function (err) {
+    client.removeProcedure('sum', function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   it("getProcedures should ok", function (done) {
-    conn.getProcedures({"name":"sum"}, function (err, cursor) {
+    client.getProcedures({"name":"sum"}, function (err, cursor) {
       expect(err).not.to.be.ok();
       cursor.current(function (err, item) {
         expect(err).not.to.be.ok();

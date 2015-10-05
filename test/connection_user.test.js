@@ -20,26 +20,26 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Connection User', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('createUser should ok', function (done) {
-    conn.createUser('user', 'pass', function (err) {
+    client.createUser('user', 'pass', function (err) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   it('removeUser should ok', function (done) {
-    conn.removeUser('user', 'pass', function (err) {
+    client.removeUser('user', 'pass', function (err) {
       expect(err).not.to.be.ok();
       done();
     });

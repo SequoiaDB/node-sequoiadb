@@ -20,14 +20,14 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Domain Actions', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var domainName = 'domain_name';
   var domain;
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      conn.createDomain(domainName, {Groups:['data']}, function (err, _domain) {
+    client.ready(function () {
+      client.createDomain(domainName, {Groups:['data']}, function (err, _domain) {
         expect(err).not.to.be.ok();
         expect(_domain).to.be.ok();
         expect(_domain.name).to.be(domainName);
@@ -38,9 +38,9 @@ describe('Domain Actions', function () {
   });
 
   after(function (done) {
-    conn.dropDomain(domainName, function (err, domain) {
+    client.dropDomain(domainName, function (err, domain) {
       expect(err).not.to.be.ok();
-      conn.disconnect(done);
+      client.disconnect(done);
     });
   });
 
@@ -77,7 +77,7 @@ describe('Domain Actions', function () {
 
     it('createCollectionSpace', function (done) {
       var options = {'Domain': domainName};
-      conn.createCollectionSpace('space', options, function (err, space) {
+      client.createCollectionSpace('space', options, function (err, space) {
         expect(err).not.to.be.ok();
         expect(space).to.be.ok();
         _space = space;
@@ -124,7 +124,7 @@ describe('Domain Actions', function () {
     });
 
     it('dropCollectionSpace should ok', function (done) {
-      conn.dropCollectionSpace('space', function (err) {
+      client.dropCollectionSpace('space', function (err) {
         expect(err).not.to.be.ok();
         done();
       });
