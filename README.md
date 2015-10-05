@@ -10,12 +10,12 @@ $ npm install sequoiadb --save
 
 ## API
 
-### Connection
-Create a connection to sequoiadb server:
+### Client
+Create a client to sequoiadb server:
 
 ```js
-var Connection = require('sequoiadb').Connection;
-var conn = new Connection(11810, "ip", {
+var Client = require('sequoiadb').Client;
+var client = new Client(11810, "ip", {
   user: "",
   pass: ""
 });
@@ -24,13 +24,13 @@ var conn = new Connection(11810, "ip", {
 Disconnect with sequoiadb server:
 
 ```js
-conn.disconnect([callback]);
+client.disconnect([callback]);
 ```
 
-Wait for connection ready:
+Wait for client ready:
 
 ```js
-conn.ready(function () {
+client.ready(function () {
   // TODO
 });
 ```
@@ -41,7 +41,7 @@ All operation must be after db ready.
 Create a user:
 
 ```js
-conn.createUser('user', 'pass', function (err) {
+client.createUser('user', 'pass', function (err) {
   // TODO
 });
 ```
@@ -49,7 +49,7 @@ conn.createUser('user', 'pass', function (err) {
 Remove a user:
 
 ```js
-conn.removeUser('user', 'pass', function (err) {
+client.removeUser('user', 'pass', function (err) {
   // TODO
 });
 ```
@@ -58,14 +58,14 @@ conn.removeUser('user', 'pass', function (err) {
 Create CollectionSpace in sequoiadb:
 
 ```js
-conn.createCollectionSpace("space_name", function (err, space) {
+client.createCollectionSpace("space_name", function (err, space) {
   // TODO
 });
 ```
 Get CollectionSpace in sequoiadb by name:
 
 ```js
-conn.getCollectionSpace("space_name", function (err, space) {
+client.getCollectionSpace("space_name", function (err, space) {
   // TODO
 });
 ```
@@ -73,7 +73,7 @@ conn.getCollectionSpace("space_name", function (err, space) {
 Check given space name whether exist:
 
 ```
-conn.isCollectionSpaceExist("space_name", function (err, exist) {
+client.isCollectionSpaceExist("space_name", function (err, exist) {
   // TODO
 });
 ```
@@ -81,7 +81,7 @@ conn.isCollectionSpaceExist("space_name", function (err, exist) {
 Drop CollectionSpace:
 
 ```js
-conn.dropCollectionSpace("space_name", function (err) {
+client.dropCollectionSpace("space_name", function (err) {
   // TODO
 });
 ```
@@ -89,7 +89,7 @@ conn.dropCollectionSpace("space_name", function (err) {
 Get all CollectionSpaces:
 
 ```js
-conn.getCollectionSpaces(function (err, cursor) {
+client.getCollectionSpaces(function (err, cursor) {
   // TODO
 });
 ```
