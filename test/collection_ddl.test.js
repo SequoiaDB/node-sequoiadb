@@ -22,13 +22,13 @@ var CollectionSpace = require('../lib/collection_space');
 
 describe('Collection DDL', function () {
   var Collection = require('../lib/collection');
-  var conn = common.createConnection();
+  var client = common.createClient();
   var collectionSpace;
   var spaceName = 'spacename' + Math.floor(Math.random() * 100);
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      conn.createCollectionSpace(spaceName, function (err, space) {
+    client.ready(function () {
+      client.createCollectionSpace(spaceName, function (err, space) {
         expect(err).not.to.be.ok();
         expect(space).to.be.a(CollectionSpace);
         expect(space.name).to.be(spaceName);
@@ -39,10 +39,10 @@ describe('Collection DDL', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
       collectionSpace = null;
-      conn.disconnect(done);
+      client.disconnect(done);
     });
   });
 

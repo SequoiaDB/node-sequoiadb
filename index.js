@@ -18,3 +18,4 @@ exports.Connection = require("./lib/connection");
 exports.Lob = require("./lib/lob");
 exports.SDB = require("./lib/const");
 exports.Long = require("long");
+exports.Client = require('./client');

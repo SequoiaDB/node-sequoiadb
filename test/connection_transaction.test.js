@@ -20,41 +20,39 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Connection Transaction', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
-    conn.ready(function () {
-      done();
-    });
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('beginTransaction should ok', function (done) {
-    conn.beginTransaction(function (err) {
+    client.beginTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
   it('commitTransaction should ok', function (done) {
-    conn.commitTransaction(function (err) {
+    client.commitTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
   it('beginTransaction should ok', function (done) {
-    conn.beginTransaction(function (err) {
+    client.beginTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });
   });
 
   it('rollbackTransaction should ok', function (done) {
-    conn.rollbackTransaction(function (err) {
+    client.rollbackTransaction(function (err) {
       expect(err).to.not.be.ok();
       done();
     });

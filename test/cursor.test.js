@@ -21,13 +21,13 @@ var common = require('./common');
 var Cursor = require('../lib/cursor');
 
 describe('/lib/cursor', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var cursor;
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      conn.getCollectionSpaces(function (err, _cursor) {
+    client.ready(function () {
+      client.getCollectionSpaces(function (err, _cursor) {
         expect(err).not.to.be.ok();
         expect(_cursor).to.be.a(Cursor);
         cursor = _cursor;
@@ -37,7 +37,7 @@ describe('/lib/cursor', function () {
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('next should ok', function (done) {

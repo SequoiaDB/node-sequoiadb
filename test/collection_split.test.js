@@ -22,7 +22,7 @@ var Collection = require('../lib/collection');
 var Node = require('../lib/node');
 
 describe('Collection split', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var _collection;
   var _space;
 
@@ -34,17 +34,15 @@ describe('Collection split', function () {
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      done();
-    });
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('create collection space should ok', function(done){
-    conn.createCollectionSpace(spaceName, function (err, space) {
+    client.createCollectionSpace(spaceName, function (err, space) {
       expect(err).not.to.be.ok();
       expect(space).not.to.be(null);
       expect(space.name).to.be(spaceName);
@@ -54,7 +52,7 @@ describe('Collection split', function () {
   });
 
   it('create source group should ok', function (done) {
-    conn.createReplicaGroup("source", function (err, group) {
+    client.createReplicaGroup("source", function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       srcGroup = group;
@@ -76,7 +74,7 @@ describe('Collection split', function () {
 
   it('activate source group should ok', function (done) {
     this.timeout(20000);
-    conn.activateReplicaGroup('source', function (err, _) {
+    client.activateReplicaGroup('source', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -93,7 +91,7 @@ describe('Collection split', function () {
   });
 
   it('create dest group should ok', function(done){
-    conn.createReplicaGroup("dest", function(err, group){
+    client.createReplicaGroup("dest", function(err, group){
       expect(err).not.to.be.ok();
       expect(group).not.to.be(null);
       dstGroup = group;
@@ -122,7 +120,7 @@ describe('Collection split', function () {
 
   it('activate dest group should ok', function (done) {
     this.timeout(20000);
-    conn.activateReplicaGroup('dest', function (err, _) {
+    client.activateReplicaGroup('dest', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -179,7 +177,7 @@ describe('Collection split', function () {
   });
 
   it('drop collection space should ok', function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -187,7 +185,7 @@ describe('Collection split', function () {
 
   it('remove source group should ok', function (done) {
     this.timeout(10000);
-    conn.removeReplicaGroup('source', function (err, _) {
+    client.removeReplicaGroup('source', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -195,7 +193,7 @@ describe('Collection split', function () {
 
   it('remove dest group should ok', function (done) {
     this.timeout(10000);
-    conn.removeReplicaGroup('dest', function (err, _) {
+    client.removeReplicaGroup('dest', function (err, _) {
       expect(err).not.to.be.ok();
       done();
     });

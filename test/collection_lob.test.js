@@ -23,7 +23,7 @@ var Lob = require('../lib/lob');
 var Long = require('long');
 
 describe('Collection Lob', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var collection;
 
   var spaceName = 'foo7';
@@ -31,7 +31,7 @@ describe('Collection Lob', function () {
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
+    client.ready(function () {
       var createCollection = function (space) {
         space.createCollection(collectionName, function (err, _collection) {
           expect(err).not.to.be.ok();
@@ -40,9 +40,9 @@ describe('Collection Lob', function () {
           done();
         });
       };
-      conn.createCollectionSpace(spaceName, function (err, space) {
+      client.createCollectionSpace(spaceName, function (err, space) {
         if (err) {
-          conn.getCollectionSpace(spaceName, function (err, _space) {
+          client.getCollectionSpace(spaceName, function (err, _space) {
             expect(err).not.to.be.ok();
             createCollection(_space);
           });
@@ -56,10 +56,9 @@ describe('Collection Lob', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect();
-      done();
+      client.disconnect(done);
     });
   });
 
@@ -116,7 +115,7 @@ describe('Collection Lob', function () {
   var currentLob;
   it("set read from master first", function(done){
     var option = {"PreferedInstance":"M"};
-    conn.setSessionAttr(option, function (err) {
+    client.setSessionAttr(option, function (err) {
       expect(err).not.to.be.ok();
       done();
     });
@@ -163,7 +162,7 @@ describe('Collection Lob', function () {
 
   it("set read from master first", function(done){
     var option = {"PreferedInstance":"M"};
-    conn.setSessionAttr(option, function (err) {
+    client.setSessionAttr(option, function (err) {
       expect(err).not.to.be.ok();
       done();
     });

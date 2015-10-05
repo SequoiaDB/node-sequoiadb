@@ -19,20 +19,20 @@
 var expect = require('expect.js');
 var common = require('./common');
 
-describe('Connection', function () {
-  var conn = common.createConnection();
+describe('Client', function () {
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('isValid should ok', function (done) {
-    conn.isValid(function (err, valid) {
+    client.isValid(function (err, valid) {
       expect(err).not.to.be.ok();
       expect(valid).to.be(true);
       done();
@@ -41,7 +41,7 @@ describe('Connection', function () {
 
   it('setSessionAttr should ok', function (done) {
     var conf = {"PreferedInstance": "m"};
-    conn.setSessionAttr(conf, function (err) {
+    client.setSessionAttr(conf, function (err) {
       expect(err).not.to.be.ok();
       done();
     });

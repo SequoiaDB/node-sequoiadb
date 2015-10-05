@@ -20,19 +20,19 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Replica Group', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   it('getReplicaGroups should ok', function (done) {
-    conn.getReplicaGroups(function (err, cursor) {
+    client.getReplicaGroups(function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.ok();
       cursor.current(function (err, item) {
@@ -46,7 +46,7 @@ describe('Replica Group', function () {
   });
 
   it('getReplicaGroupById should ok', function (done) {
-    conn.getReplicaGroupById(1, function (err, group) {
+    client.getReplicaGroupById(1, function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).to.be.ok();
       expect(group.isCatalog).to.be(true);
@@ -57,7 +57,7 @@ describe('Replica Group', function () {
   });
 
   it('getReplicaGroupByName should ok', function (done) {
-    conn.getReplicaGroupByName('SYSCatalogGroup', function (err, group) {
+    client.getReplicaGroupByName('SYSCatalogGroup', function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).to.be.ok();
       expect(group.isCatalog).to.be(true);
@@ -68,7 +68,7 @@ describe('Replica Group', function () {
   });
 
   it('createReplicaGroup should ok', function (done) {
-    conn.createReplicaGroup('group5', function (err, group) {
+    client.createReplicaGroup('group5', function (err, group) {
       expect(err).not.to.be.ok();
       expect(group).to.be.ok();
       expect(group.isCatalog).to.be(false);
@@ -82,7 +82,7 @@ describe('Replica Group', function () {
     var host = common.ip;
     var port = 11810;
     var dbpath = common.dbpath + 'data/11890';
-    conn.createReplicaCataGroup(host, port, dbpath, null, function (err) {
+    client.createReplicaCataGroup(host, port, dbpath, null, function (err) {
       expect(err).to.be.ok();
       expect(err.message).to.be("Unable to create new catalog when there's already one exists");
       done();
@@ -90,7 +90,7 @@ describe('Replica Group', function () {
   });
 
   it('activateReplicaGroup should ok', function (done) {
-    conn.activateReplicaGroup('group5', function (err, group) {
+    client.activateReplicaGroup('group5', function (err, group) {
       expect(err).not.to.be.ok();
       // expect(group).to.be.ok();
       done();
@@ -98,7 +98,7 @@ describe('Replica Group', function () {
   });
 
   it('removeReplicaGroup should ok', function (done) {
-    conn.removeReplicaGroup('group5', function (err, group) {
+    client.removeReplicaGroup('group5', function (err, group) {
       expect(err).not.to.be.ok();
       done();
     });

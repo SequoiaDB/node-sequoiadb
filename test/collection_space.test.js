@@ -22,20 +22,20 @@ var Cursor = require('../lib/cursor');
 var CollectionSpace = require('../lib/collection_space');
 
 describe('CollectionSpace', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(done);
+    client.ready(done);
   });
 
   after(function (done) {
-    conn.disconnect(done);
+    client.disconnect(done);
   });
 
   var spaceName = 'spaceName' + Math.floor(Math.random() * 100);
   it('createCollectionSpace should ok', function (done) {
-    conn.createCollectionSpace(spaceName, function (err, space) {
+    client.createCollectionSpace(spaceName, function (err, space) {
       expect(err).not.to.be.ok();
       expect(space).to.be.a(CollectionSpace);
       expect(space.name).to.be(spaceName);
@@ -44,7 +44,7 @@ describe('CollectionSpace', function () {
   });
 
   it('isCollectionSpaceExist should ok', function (done) {
-    conn.isCollectionSpaceExist(spaceName, function (err, exist) {
+    client.isCollectionSpaceExist(spaceName, function (err, exist) {
       expect(err).not.to.be.ok();
       expect(exist).to.be(true);
       done();
@@ -52,7 +52,7 @@ describe('CollectionSpace', function () {
   });
 
   it('getCollectionSpace should ok', function (done) {
-    conn.getCollectionSpace(spaceName, function (err, space) {
+    client.getCollectionSpace(spaceName, function (err, space) {
       expect(err).not.to.be.ok();
       expect(space).to.be.a(CollectionSpace);
       expect(space.name).to.be(spaceName);
@@ -61,7 +61,7 @@ describe('CollectionSpace', function () {
   });
 
   it('getCollectionSpace inexist should ok', function (done) {
-    conn.getCollectionSpace('inexist', function (err) {
+    client.getCollectionSpace('inexist', function (err) {
       expect(err).to.be.ok();
       expect(err.message).to.be('Collection space does not exist');
       done();
@@ -69,14 +69,14 @@ describe('CollectionSpace', function () {
   });
 
   it('dropCollectionSpace should ok', function (done) {
-    conn.dropCollectionSpace(spaceName, function (err, space) {
+    client.dropCollectionSpace(spaceName, function (err, space) {
       expect(err).not.to.be.ok();
       done();
     });
   });
 
   it('isCollectionSpaceExist should ok', function (done) {
-    conn.isCollectionSpaceExist(spaceName, function (err, exist) {
+    client.isCollectionSpaceExist(spaceName, function (err, exist) {
       expect(err).not.to.be.ok();
       expect(exist).to.be(false);
       done();
@@ -84,7 +84,7 @@ describe('CollectionSpace', function () {
   });
 
   it('should ok', function (done) {
-    conn.getCollectionSpaces(function (err, cursor) {
+    client.getCollectionSpaces(function (err, cursor) {
       expect(err).not.to.be.ok();
       expect(cursor).to.be.a(Cursor);
       done();

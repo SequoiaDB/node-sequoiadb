@@ -20,14 +20,14 @@ var expect = require('expect.js');
 var common = require('./common');
 
 describe('Connection List', function () {
-  var conn = common.createConnection();
+  var client = common.createClient();
   var spaceName = 'spaceName' + Math.floor(Math.random() * 100);
   var collectionName = 'test_coll';
 
   before(function (done) {
     this.timeout(8000);
-    conn.ready(function () {
-      conn.createCollectionSpace(spaceName, function (err, space) {
+    client.ready(function () {
+      client.createCollectionSpace(spaceName, function (err, space) {
         expect(err).not.to.be.ok();
         expect(space.name).to.be(spaceName);
         space.createCollection(collectionName, function (err, collection) {
@@ -39,14 +39,14 @@ describe('Connection List', function () {
   });
 
   after(function (done) {
-    conn.dropCollectionSpace(spaceName, function (err) {
+    client.dropCollectionSpace(spaceName, function (err) {
       expect(err).not.to.be.ok();
-      conn.disconnect(done);
+      client.disconnect(done);
     });
   });
 
   it('getCollectionSpaces should ok', function (done) {
-    conn.getCollectionSpaces(function (err, cursor) {
+    client.getCollectionSpaces(function (err, cursor) {
       expect(err).to.not.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();
@@ -57,7 +57,7 @@ describe('Connection List', function () {
   });
 
   it('getCollectionSpaceNames should ok', function (done) {
-    conn.getCollectionSpaceNames(function (err, names) {
+    client.getCollectionSpaceNames(function (err, names) {
       expect(err).to.not.be.ok();
       //expect(names.length).to.be(1);
       expect(names.length).to.be.above(0);
@@ -66,7 +66,7 @@ describe('Connection List', function () {
   });
 
   it('getCollections should ok', function (done) {
-    conn.getCollections(function (err, cursor) {
+    client.getCollections(function (err, cursor) {
       expect(err).to.not.be.ok();
       cursor.current(function (err, item) {
         expect(err).to.not.be.ok();
@@ -77,7 +77,7 @@ describe('Connection List', function () {
   });
 
   it('getCollectionNames should ok', function (done) {
-    conn.getCollectionNames(function (err, names) {
+    client.getCollectionNames(function (err, names) {
       expect(err).to.not.be.ok();
       expect(names.length).to.be.above(0);
       done();
@@ -85,7 +85,7 @@ describe('Connection List', function () {
   });
 
   it('getStorageUnits should ok', function (done) {
-    conn.getStorageUnits(function (err, names) {
+    client.getStorageUnits(function (err, names) {
       expect(err).to.not.be.ok();
       expect(names.length).to.be(0);
       done();
